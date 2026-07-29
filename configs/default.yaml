@@ -1,0 +1,86 @@
+schema_version: "0.1"
+
+project:
+  seed: 0
+  output_resolution: preserve_input
+
+reference:
+  counts_source: null
+  sample_key: sample
+  cell_type_key: cell_type
+
+spatial:
+  counts_source: null
+  sample_key: sample
+  coordinates_key: spatial
+  domain_key: null
+
+annotation:
+  species: null
+  genome_build: null
+  strip_ensembl_version: true
+  custom_target_catalog: null
+
+eligibility:
+  min_total_counts: 20
+  min_detected_cells: 10
+  min_detected_fraction: 0.002
+  min_supported_samples: 2
+
+metacells:
+  enabled: true
+  target_size: 25
+  min_size: 10
+  max_size: 50
+  max_metacells: 10000
+  constrain_by_sample: true
+  constrain_by_cell_type: true
+
+anchors:
+  target_number: 2000
+  exclude_mitochondrial: true
+  exclude_ribosomal: true
+  exclude_targets: true
+
+mapping:
+  primary_backend: tangram
+  secondary_backend: spage
+  enable_ensemble: true
+
+calibration:
+  gene_folds: 5
+  match_features:
+    - mean_expression
+    - detection_rate
+    - dispersion
+    - cell_type_specificity
+    - sample_reproducibility
+  weight_scope: difficulty_bin
+
+refinement:
+  gene_network: true
+  spatial_graph: true
+  max_spatial_lambda: 0.3
+  require_expression_similarity: true
+
+uncertainty:
+  bootstrap_repeats: 20
+  interval_level: 0.9
+  enable_abstention: true
+
+evaluation:
+  primary_metrics:
+    - spearman
+    - z_nrmse
+    - ssim
+    - jensen_shannon
+    - domain_enrichment_concordance
+    - low_expression_hotspot_f1
+  report_moran_error: true
+
+compute:
+  device: cuda
+  precision: float32
+  mixed_precision: false
+  target_chunk_size: 256
+  parallel_gpu_folds: 1
