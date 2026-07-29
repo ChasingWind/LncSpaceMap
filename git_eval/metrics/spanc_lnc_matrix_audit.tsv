@@ -1,0 +1,18 @@
+file	kind	observations	features	bytes	status	detail
+GSM6622292_AM1_filtered_feature_bc_matrix.h5	10x_h5	6720	33538	21410878	PASS	
+GSM6622293_AM2_filtered_feature_bc_matrix.h5	10x_h5	2506	33538	10747737	PASS	
+GSM6622294_AM3_pre_filtered_feature_bc_matrix.h5	10x_h5	13896	33538	47824701	PASS	
+GSM6622295_AM3_post_filtered_feature_bc_matrix.h5	10x_h5	12707	33538	45770525	PASS	
+GSM6622296_AM4_filtered_feature_bc_matrix.h5	10x_h5	11488	33538	41772592	PASS	
+GSM6622297_AM5_filtered_feature_bc_matrix.h5	10x_h5	9825	33538	35660127	PASS	
+GSM6622298_AM6_filtered_feature_bc_matrix.h5	10x_h5	11130	33538	40468705	PASS	
+GSM6622299_CM1_filtered_feature_bc_matrix.h5	10x_h5	10000	33538	17272230	PASS	
+GSM6622300_CM2_filtered_feature_bc_matrix.h5	10x_h5	8139	33538	34076264	PASS	
+GSM6622301_CM3_filtered_feature_bc_matrix.h5	10x_h5	11019	33538	40884897	PASS	
+GSM6622302_CM1_lym_filtered_feature_bc_matrix.h5	10x_h5	11468	33538	41374495	PASS	
+MelD/filtered_feature_bc_matrix.h5	10x_h5	623	36601	528005	PASS	
+MelDN/filtered_feature_bc_matrix.h5	10x_h5	1728	36601	1046238	PASS	
+Curio_breast_cancer_genes.h5ad	h5ad	57703	26790	179984704	PASS	"{""layers"":[],""obsm"":[""X_spatial"",""spatial""],""obs_columns"":[],""var_columns"":[]}"
+Curio_breast_cancer_uTARs.h5ad	h5ad	51174	27404	11234602468	PASS	"{""layers"":[],""obsm"":[""spatial""],""obs_columns"":[""imagecol"",""imagerow""],""var_columns"":[]}"
+Curio_melanoma_genes.h5ad	h5ad	297240	28803	213931904	PASS	"{""layers"":[],""obsm"":[""X_spatial"",""spatial""],""obs_columns"":[],""var_columns"":[]}"
+STomics_gene_cuTARs_bin50.h5ad	h5ad	83575	206923	190114335	PASS	"{""layers"":[],""obsm"":[""X_pca"",""X_umap"",""spatial""],""obs_columns"":[""total_counts"",""n_genes_by_counts"",""pct_counts_mt"",""leiden"",""orig.ident"",""x"",""y""],""var_columns"":[""real_gene_name"",""n_cells"",""n_counts"",""mean_umi"",""means"",""dispersions"",""dispersions_norm"",""highly_variable""]}"

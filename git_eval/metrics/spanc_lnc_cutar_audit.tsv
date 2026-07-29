@@ -1,0 +1,7 @@
+sample_id	path	status	error
+AM1	Acral_Mel1_cuTAR_mat.txt	FAIL	Acral_Mel1_cuTAR_mat.txt: cannot determine matrix orientation (row cuTAR fraction=0.000, column fraction=0.000)
+AM2	Acral_Mel2_cuTAR_mat.txt	FAIL	Acral_Mel2_cuTAR_mat.txt: cannot determine matrix orientation (row cuTAR fraction=0.000, column fraction=0.000)
+AM3_pre	Acral_Mel3_Pre_cuTAR_mat.txt	FAIL	Acral_Mel3_Pre_cuTAR_mat.txt: cannot determine matrix orientation (row cuTAR fraction=0.000, column fraction=0.000)
+AM3_post	Acral_Mel3_Post_cuTAR_mat.txt	FAIL	Acral_Mel3_Post_cuTAR_mat.txt: cannot determine matrix orientation (row cuTAR fraction=0.000, column fraction=0.000)
+AM5	Acral_Mel5_cuTAR_mat.txt	FAIL	Acral_Mel5_cuTAR_mat.txt: cannot determine matrix orientation (row cuTAR fraction=0.000, column fraction=0.000)
+AM6	Acral_Mel6_cuTAR_mat.txt	FAIL	Acral_Mel6_cuTAR_mat.txt: cannot determine matrix orientation (row cuTAR fraction=0.000, column fraction=0.000)
