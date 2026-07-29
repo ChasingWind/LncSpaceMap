@@ -57,6 +57,7 @@ and complete result directories must not be committed. See `.gitignore` and
 - [`docs/BENCHMARK_PROTOCOL.md`](docs/BENCHMARK_PROTOCOL.md)
 - [`docs/COMPUTE_PROFILE.md`](docs/COMPUTE_PROFILE.md)
 - [`docs/SPANCLNC_DATA_ASSESSMENT.md`](docs/SPANCLNC_DATA_ASSESSMENT.md)
+- [`docs/SPANCLNC_PREPROCESSING.md`](docs/SPANCLNC_PREPROCESSING.md)
 
 ## Resolution statement
 

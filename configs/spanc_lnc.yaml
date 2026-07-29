@@ -1,0 +1,38 @@
+schema_version: "0.1"
+genome_build: GRCh38
+target_catalog: 00_cuTARs.bed
+
+# Only samples with an explicit gene/cutAR pair are admitted. AM4 and all
+# cutaneous melanoma matrices remain audit-only until matching cuTAR files are
+# identified.
+sample_pairs:
+  - sample_id: AM1
+    gene_file: GSM6622292_AM1_filtered_feature_bc_matrix.h5
+    cutar_file: Acral_Mel1_cuTAR_mat.txt
+    subtype: acral
+    treatment: untreated
+  - sample_id: AM2
+    gene_file: GSM6622293_AM2_filtered_feature_bc_matrix.h5
+    cutar_file: Acral_Mel2_cuTAR_mat.txt
+    subtype: acral
+    treatment: untreated
+  - sample_id: AM3_pre
+    gene_file: GSM6622294_AM3_pre_filtered_feature_bc_matrix.h5
+    cutar_file: Acral_Mel3_Pre_cuTAR_mat.txt
+    subtype: acral
+    treatment: pre_anti_PD1
+  - sample_id: AM3_post
+    gene_file: GSM6622295_AM3_post_filtered_feature_bc_matrix.h5
+    cutar_file: Acral_Mel3_Post_cuTAR_mat.txt
+    subtype: acral
+    treatment: post_anti_PD1
+  - sample_id: AM5
+    gene_file: GSM6622297_AM5_filtered_feature_bc_matrix.h5
+    cutar_file: Acral_Mel5_cuTAR_mat.txt
+    subtype: acral
+    treatment: untreated
+  - sample_id: AM6
+    gene_file: GSM6622298_AM6_filtered_feature_bc_matrix.h5
+    cutar_file: Acral_Mel6_cuTAR_mat.txt
+    subtype: acral
+    treatment: untreated
