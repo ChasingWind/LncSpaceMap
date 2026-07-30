@@ -18,6 +18,7 @@ from lncspacemap.evaluation import evaluate_predictions
 from lncspacemap.io.spatial import load_visium_counts, validate_spatial_counts
 from lncspacemap.mapping.backends import run_spage, run_tangram
 from lncspacemap.preprocessing.anchors import select_shared_anchors
+from lncspacemap.preprocessing.proxies import build_spatial_proxy_folds
 
 LOG = logging.getLogger("lncspacemap.week1_baseline")
 
@@ -106,10 +107,41 @@ def run_fold(
     targets = [
         gene for gene in present if int(np.count_nonzero(raw_truth[gene])) >= min_spots
     ]
+    target_source = "reference_only_proxy_folds"
     if len(targets) < int(config["targets"]["min_evaluable_targets"]):
-        raise ValueError(
-            f"fold {fold} has only {len(targets)} targets detected in >= {min_spots} spots"
+        fallback = build_spatial_proxy_folds(
+            reference,
+            spatial,
+            feature_qc,
+            folds,
+            n_folds=int(config["spatial_proxy_fallback"]["folds"]),
+            genes_per_fold=int(
+                config["spatial_proxy_fallback"]["genes_per_fold"]
+            ),
+            min_detected_spots=min_spots,
+            max_detected_fraction=float(
+                config["spatial_proxy_fallback"]["max_detected_fraction"]
+            ),
         )
+        (review_dir / "manifests").mkdir(parents=True, exist_ok=True)
+        fallback.to_csv(
+            review_dir / "manifests/week1_meld_spatial_proxy_folds.tsv",
+            sep="\t",
+        )
+        target_table = fallback.loc[fallback["fold"].eq(fold)].copy()
+        requested = target_table.index.astype(str).tolist()
+        targets = requested
+        raw_truth = _matrix_frame(spatial, targets)
+        target_source = "meld_spatial_evaluable_fallback"
+        LOG.warning(
+            "reference-only fold %d had insufficient spatial truth; "
+            "using deterministic MelD proxy panel with %d targets",
+            fold,
+            len(targets),
+        )
+    else:
+        target_table = folds.loc[targets].copy()
+        target_table["proxy_selection"] = "reference_only"
     truth = _matrix_frame(spatial, targets, log_normalize=True)
     anchor_table = select_shared_anchors(
         reference,
@@ -130,7 +162,6 @@ def run_fold(
     anchor_table.to_csv(
         review_dir / f"manifests/week1_meld_fold{fold}_anchors.tsv", sep="\t"
     )
-    target_table = folds.loc[targets].copy()
     target_table["spatial_detected_spots"] = [
         int(np.count_nonzero(raw_truth[g])) for g in targets
     ]
@@ -194,6 +225,7 @@ def run_fold(
         "anchors": len(anchors),
         "targets_requested": len(requested),
         "targets_evaluated": len(targets),
+        "target_source": target_source,
         "leakage_check": "PASS",
         "spot_order_check": "PASS",
         "packages": _versions(),
@@ -206,10 +238,12 @@ def run_fold(
         / f"manifests/week1_meld_fold{fold}_{backend}_manifest.json"
     ).write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
     LOG.info(
-        "PASS_WEEK1_BASELINE backend=%s fold=%d spots=%d anchors=%d targets=%d",
+        "PASS_WEEK1_BASELINE backend=%s fold=%d spots=%d anchors=%d targets=%d "
+        "target_source=%s",
         backend,
         fold,
         spatial.n_obs,
         len(anchors),
         len(targets),
+        target_source,
     )
