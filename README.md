@@ -15,7 +15,8 @@ SPanC-Lnc reference preparation is complete. The finalized development
 reference contains 56,557 matched cells, 33,538 genes, and 43,382 cuTAR
 targets with explicit sample-quantification masks and genomic coordinates.
 Week 1 contract, GENCODE annotation, target-eligibility, and leakage-free
-masked-gene split implementation is active.
+masked-gene split implementation is complete. The MelD masked-gene SpaGE and
+Tangram baseline stage is available in `scripts/run_week1_baseline.py`.
 
 ## Planned workflow
 
@@ -62,6 +63,7 @@ and complete result directories must not be committed. See `.gitignore` and
 - [`docs/SPANCLNC_DATA_ASSESSMENT.md`](docs/SPANCLNC_DATA_ASSESSMENT.md)
 - [`docs/SPANCLNC_PREPROCESSING.md`](docs/SPANCLNC_PREPROCESSING.md)
 - [`docs/WEEK1_EXECUTION.md`](docs/WEEK1_EXECUTION.md)
+- [`docs/WEEK1_BASELINE.md`](docs/WEEK1_BASELINE.md)
 
 ## Resolution statement
 
