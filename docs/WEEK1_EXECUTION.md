@@ -33,7 +33,8 @@ git_eval/
 ├── metrics/week1_annotation_summary.tsv
 ├── metrics/week1_target_eligibility_summary.tsv
 ├── metrics/week1_masked_gene_fold_summary.tsv
-└── manifests/week1_prepare_manifest.json
+├── manifests/week1_prepare_manifest.json
+└── manifests/week1_masked_gene_folds.tsv
 ```
 
 Required terminal marker:
