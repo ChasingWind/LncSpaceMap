@@ -8,7 +8,11 @@ from lncspacemap.io.spanc_lnc import inspect_text_matrix, match_barcodes
 def test_detect_features_by_cells(tmp_path: Path):
     path = tmp_path / "matrix.tsv"
     pd.DataFrame(
-        {"feature": ["cuTAR1", "cuTAR2"], "AAAC-1": [1, 0], "CCGT-1": [0, 2]}
+        {
+            "feature": ["cuTAR1", "cuTAR2"],
+            "AAAAAAAAAAAAAAAA-1": [1, 0],
+            "CCCCCCCCCCCCCCCC-1": [0, 2],
+        }
     ).to_csv(path, sep="\t", index=False)
     info = inspect_text_matrix(path)
     assert info.orientation == "features_by_cells"
