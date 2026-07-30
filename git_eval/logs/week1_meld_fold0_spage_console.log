@@ -1,0 +1,7 @@
+2026-07-30 17:07:21,012 WARNING reference-only fold 0 had insufficient spatial truth; using deterministic MelD proxy panel with 25 targets
+2026-07-30 17:07:38,408 INFO PASS_WEEK1_BASELINE backend=spage fold=0 spots=617 anchors=2000 targets=25 target_source=meld_spatial_evaluable_fallback
+
+real	0m25.275s
+user	0m30.145s
+sys	0m3.739s
+spage_exit_code=0

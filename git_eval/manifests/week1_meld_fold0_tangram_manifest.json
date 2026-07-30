@@ -1,0 +1,30 @@
+{
+  "anchors": 2000,
+  "backend": "tangram",
+  "fold": 0,
+  "leakage_check": "PASS",
+  "packages": {
+    "SpaGE": "not-installed-or-unversioned",
+    "anndata": "0.12.10",
+    "numpy": "2.4.3",
+    "scanpy": "1.11.5",
+    "scipy": "1.17.1",
+    "tangram-sc": "1.0.4"
+  },
+  "platform": "Linux-4.18.0-305.3.1.el8_4.x86_64-x86_64-with-glibc2.27",
+  "python": "3.11.13",
+  "schema_version": "0.1",
+  "spot_order_check": "PASS",
+  "spots": 617,
+  "stage": "week1_meld_masked_baseline",
+  "status": "PASS",
+  "summary": {
+    "evaluable_spearman": 25,
+    "median_spearman": 0.06662681833218047,
+    "median_z_nrmse": 1.3769328808855852,
+    "targets": 25
+  },
+  "target_source": "meld_spatial_evaluable_fallback",
+  "targets_evaluated": 25,
+  "targets_requested": 25
+}

@@ -1,0 +1,13 @@
+/home/bio_yinshuwei/miniconda3/envs/gstnet/lib/python3.11/site-packages/anndata/_core/anndata.py:1825: UserWarning: Variable names are not unique. To make them unique, call `.var_names_make_unique`.
+  utils.warn_names_duplicates("var")
+/home/bio_yinshuwei/miniconda3/envs/gstnet/lib/python3.11/site-packages/anndata/_core/anndata.py:1825: UserWarning: Variable names are not unique. To make them unique, call `.var_names_make_unique`.
+  utils.warn_names_duplicates("var")
+... storing 'feature_types' as categorical
+... storing 'genome' as categorical
+... storing 'gene_symbol' as categorical
+2026-07-30 16:37:22,099 INFO PASS_MELD_SPATIAL_CONTRACT spots=617 genes=36601
+
+real	0m3.580s
+user	0m3.176s
+sys	0m0.291s
+prepare_exit_code=0

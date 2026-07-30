@@ -1,0 +1,2 @@
+status	spots	genes	unique_spots	unique_genes	raw_nonnegative_integer_counts	coordinates_aligned
+PASS	617	36601	True	True	True	True

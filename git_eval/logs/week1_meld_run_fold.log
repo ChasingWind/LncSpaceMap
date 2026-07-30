@@ -1,0 +1,23 @@
+2026-07-30 16:57:41,415 WARNING reference-only fold 0 had insufficient spatial truth; using deterministic MelD proxy panel with 25 targets
+2026-07-30 17:07:21,012 WARNING reference-only fold 0 had insufficient spatial truth; using deterministic MelD proxy panel with 25 targets
+2026-07-30 17:07:38,408 INFO PASS_WEEK1_BASELINE backend=spage fold=0 spots=617 anchors=2000 targets=25 target_source=meld_spatial_evaluable_fallback
+2026-07-30 17:10:21,774 WARNING reference-only fold 0 had insufficient spatial truth; using deterministic MelD proxy panel with 25 targets
+2026-07-30 17:11:03,665 WARNING reference-only fold 0 had insufficient spatial truth; using deterministic MelD proxy panel with 25 targets
+2026-07-30 17:11:21,685 INFO 2000 training genes are saved in `uns``training_genes` of both single cell and spatial Anndatas.
+2026-07-30 17:11:21,686 INFO 2000 overlapped genes are saved in `uns``overlap_genes` of both single cell and spatial Anndatas.
+2026-07-30 17:11:21,686 INFO uniform based density prior is calculated and saved in `obs``uniform_density` of the spatial Anndata.
+2026-07-30 17:11:21,686 INFO rna count based density prior is calculated and saved in `obs``rna_count_based_density` of the spatial Anndata.
+2026-07-30 17:11:21,686 INFO Allocate tensors for mapping.
+2026-07-30 17:11:22,280 INFO Begin training with 2000 genes and rna_count_based density_prior in cells mode...
+2026-07-30 17:11:39,581 INFO Printing scores every 100 epochs.
+2026-07-30 17:11:47,573 INFO Saving results..
+2026-07-30 21:18:34,645 WARNING reference-only fold 0 had insufficient spatial truth; using deterministic MelD proxy panel with 25 targets
+2026-07-30 21:18:52,713 INFO 2000 training genes are saved in `uns``training_genes` of both single cell and spatial Anndatas.
+2026-07-30 21:18:52,713 INFO 2000 overlapped genes are saved in `uns``overlap_genes` of both single cell and spatial Anndatas.
+2026-07-30 21:18:52,714 INFO uniform based density prior is calculated and saved in `obs``uniform_density` of the spatial Anndata.
+2026-07-30 21:18:52,714 INFO rna count based density prior is calculated and saved in `obs``rna_count_based_density` of the spatial Anndata.
+2026-07-30 21:18:52,714 INFO Allocate tensors for mapping.
+2026-07-30 21:18:53,309 INFO Begin training with 2000 genes and rna_count_based density_prior in cells mode...
+2026-07-30 21:18:55,922 INFO Printing scores every 100 epochs.
+2026-07-30 21:19:00,717 INFO Saving results..
+2026-07-30 21:19:01,483 INFO PASS_WEEK1_BASELINE backend=tangram fold=0 spots=617 anchors=2000 targets=25 target_source=meld_spatial_evaluable_fallback
