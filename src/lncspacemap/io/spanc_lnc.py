@@ -10,7 +10,7 @@ import csv
 import json
 import logging
 import re
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
 
@@ -37,10 +37,15 @@ class TextMatrixInfo:
     path: str
     delimiter: str
     orientation: str
+    header_style: str
     n_rows: int
     n_columns: int
     row_id_name: str
     first_ids: list[str]
+    row_cutar_fraction: float
+    column_cutar_fraction: float
+    row_barcode_fraction: float
+    column_barcode_fraction: float
 
 
 def load_sample_pairs(config_path: Path) -> list[SamplePair]:
@@ -59,51 +64,143 @@ def _delimiter(path: Path) -> str:
         return "\t"
 
 
-def inspect_text_matrix(path: Path, count_rows: bool = True) -> TextMatrixInfo:
+def _fraction(values: Iterable[str], pattern: re.Pattern[str]) -> float:
+    values = [str(value).strip() for value in values]
+    return float(np.mean([bool(pattern.match(value)) for value in values])) if values else 0.0
+
+
+def _text_matrix_layout(path: Path) -> dict:
+    """Resolve common TSV layouts without allowing pandas to infer an index."""
     sep = _delimiter(path)
-    preview = pd.read_csv(path, sep=sep, nrows=8, dtype=str)
-    if preview.shape[1] < 2:
+    with path.open("rt", encoding="utf-8", errors="replace", newline="") as handle:
+        reader = csv.reader(handle, delimiter=sep)
+        try:
+            header = next(reader)
+        except StopIteration as exc:
+            raise ValueError(f"{path.name}: empty matrix") from exc
+        preview_rows = []
+        for _ in range(3):
+            try:
+                preview_rows.append(next(reader))
+            except StopIteration:
+                break
+    if len(header) < 2 or not preview_rows:
         raise ValueError(f"{path.name}: expected at least two columns")
-    column_ids = [str(x) for x in preview.columns[1:]]
-    row_ids = preview.iloc[:, 0].astype(str).tolist()
-    row_score = np.mean([bool(_CUTAR_RE.match(x)) for x in row_ids])
-    col_score = np.mean([bool(_CUTAR_RE.match(x)) for x in column_ids])
-    if row_score >= 0.5 and row_score > col_score:
+
+    widths = {len(row) for row in preview_rows}
+    row_ids = [row[0].strip() for row in preview_rows if row]
+    implicit_index = widths == {len(header) + 1}
+    standard_width = widths == {len(header)}
+    if not implicit_index and not standard_width:
+        raise ValueError(
+            f"{path.name}: inconsistent field counts "
+            f"(header={len(header)}, preview={sorted(widths)})"
+        )
+
+    if implicit_index:
+        column_ids = [str(value).strip() for value in header]
+        header_style = "implicit_row_index"
+    else:
+        column_ids = [str(value).strip() for value in header[1:]]
+        header_style = "explicit_row_index"
+
+    row_cutar = _fraction(row_ids, _CUTAR_RE)
+    column_cutar = _fraction(column_ids, _CUTAR_RE)
+    row_barcode = _fraction(row_ids, _BARCODE_RE)
+    column_barcode = _fraction(column_ids, _BARCODE_RE)
+
+    if row_cutar >= 0.5 and column_barcode >= 0.5:
         orientation = "features_by_cells"
-    elif col_score >= 0.5 and col_score > row_score:
+        cell_ids = column_ids
+    elif row_barcode >= 0.5 and column_cutar >= 0.5 and standard_width:
         orientation = "cells_by_features"
+        cell_ids = row_ids
     else:
         raise ValueError(
             f"{path.name}: cannot determine matrix orientation "
-            f"(row cuTAR fraction={row_score:.3f}, column fraction={col_score:.3f})"
+            f"(row cuTAR={row_cutar:.3f}, column cuTAR={column_cutar:.3f}, "
+            f"row barcode={row_barcode:.3f}, column barcode={column_barcode:.3f}, "
+            f"header_style={header_style})"
         )
+
+    numeric_preview = [
+        value
+        for row in preview_rows
+        for value in (row[1:] if standard_width else row[1:])
+    ]
+    try:
+        numeric = np.asarray(numeric_preview, dtype=np.float64)
+    except ValueError as exc:
+        raise ValueError(f"{path.name}: non-numeric count found in preview") from exc
+    if not np.isfinite(numeric).all() or (numeric < 0).any():
+        raise ValueError(f"{path.name}: counts must be finite and non-negative")
+    if not np.allclose(numeric, np.rint(numeric), atol=1e-6):
+        raise ValueError(f"{path.name}: non-integer value found in count preview")
+
+    return {
+        "sep": sep,
+        "orientation": orientation,
+        "header_style": header_style,
+        "row_ids": row_ids,
+        "column_ids": column_ids,
+        "cell_ids": cell_ids,
+        "row_cutar_fraction": row_cutar,
+        "column_cutar_fraction": column_cutar,
+        "row_barcode_fraction": row_barcode,
+        "column_barcode_fraction": column_barcode,
+    }
+
+
+def inspect_text_matrix(path: Path, count_rows: bool = True) -> TextMatrixInfo:
+    layout = _text_matrix_layout(path)
     n_rows = -1
     if count_rows:
         with path.open("rb") as handle:
             n_rows = max(sum(1 for _ in handle) - 1, 0)
     return TextMatrixInfo(
         path=path.name,
-        delimiter="tab" if sep == "\t" else repr(sep),
-        orientation=orientation,
+        delimiter="tab" if layout["sep"] == "\t" else repr(layout["sep"]),
+        orientation=layout["orientation"],
+        header_style=layout["header_style"],
         n_rows=n_rows,
-        n_columns=preview.shape[1] - 1,
-        row_id_name=str(preview.columns[0]),
-        first_ids=row_ids[:3],
+        n_columns=len(layout["column_ids"]),
+        row_id_name=(
+            "implicit_index"
+            if layout["header_style"] == "implicit_row_index"
+            else "first_column"
+        ),
+        first_ids=layout["row_ids"][:3],
+        row_cutar_fraction=layout["row_cutar_fraction"],
+        column_cutar_fraction=layout["column_cutar_fraction"],
+        row_barcode_fraction=layout["row_barcode_fraction"],
+        column_barcode_fraction=layout["column_barcode_fraction"],
     )
 
 
-def read_cutar_matrix(path: Path, chunk_rows: int = 64) -> ad.AnnData:
+def read_cutar_matrix(path: Path, chunk_rows: int = 64):
     """Read a dense text matrix incrementally and return sparse cells x cuTARs."""
     import anndata as ad
 
-    info = inspect_text_matrix(path, count_rows=False)
-    sep = "\t" if info.delimiter == "tab" else info.delimiter.strip("'")
+    layout = _text_matrix_layout(path)
+    sep = layout["sep"]
     blocks: list[sp.csr_matrix] = []
     row_ids: list[str] = []
     column_ids: list[str] | None = None
-    for chunk in pd.read_csv(
-        path, sep=sep, chunksize=chunk_rows, index_col=0, dtype=np.float32
-    ):
+    read_options = {
+        "sep": sep,
+        "chunksize": chunk_rows,
+        "index_col": 0,
+        "dtype": np.float32,
+    }
+    if layout["header_style"] == "implicit_row_index":
+        read_options.update(
+            {
+                "header": None,
+                "skiprows": 1,
+                "names": ["feature_id", *layout["column_ids"]],
+            }
+        )
+    for chunk in pd.read_csv(path, **read_options):
         ids = chunk.index.astype(str).tolist()
         values = chunk.to_numpy(dtype=np.float32, copy=False)
         if not np.isfinite(values).all() or (values < 0).any():
@@ -117,7 +214,7 @@ def read_cutar_matrix(path: Path, chunk_rows: int = 64) -> ad.AnnData:
     if not blocks or column_ids is None:
         raise ValueError(f"{path.name}: empty matrix")
     matrix = sp.vstack(blocks, format="csr")
-    if info.orientation == "features_by_cells":
+    if layout["orientation"] == "features_by_cells":
         matrix = matrix.T.tocsr()
         obs_names, var_names = column_ids, row_ids
     else:
@@ -194,6 +291,104 @@ def match_barcodes(
         raise ValueError("gene and cuTAR matrices have zero barcode overlap")
     LOG.info("barcode strategy=%s overlap=%d", strategy, overlap)
     return strategy, [x[0] for x in pairs], [x[1] for x in pairs]
+
+
+def read_10x_barcodes(path: Path) -> list[str]:
+    import h5py
+
+    with h5py.File(path, "r") as handle:
+        values = handle["matrix/barcodes"][:]
+    return [
+        value.decode("utf-8") if isinstance(value, (bytes, np.bytes_)) else str(value)
+        for value in values
+    ]
+
+
+def load_bed_feature_ids(path: Path) -> set[str]:
+    ids: set[str] = set()
+    with path.open("rt", encoding="utf-8", errors="replace") as handle:
+        for line_number, line in enumerate(handle, start=1):
+            fields = line.rstrip("\n").split("\t")
+            if len(fields) < 4:
+                raise ValueError(f"{path.name}: BED line {line_number} has <4 columns")
+            ids.add(fields[3])
+    if not ids:
+        raise ValueError(f"{path.name}: no feature IDs found in BED column 4")
+    return ids
+
+
+def scan_cutar_feature_ids(path: Path, bed_ids: set[str]) -> dict:
+    sep = _delimiter(path)
+    seen: set[str] = set()
+    duplicates = 0
+    bed_overlap = 0
+    with path.open("rt", encoding="utf-8", errors="replace") as handle:
+        next(handle, None)
+        for line in handle:
+            feature_id = line.split(sep, 1)[0].strip()
+            if feature_id in seen:
+                duplicates += 1
+            else:
+                seen.add(feature_id)
+                bed_overlap += int(feature_id in bed_ids)
+    return {
+        "n_cutars": len(seen),
+        "duplicate_cutar_ids": duplicates,
+        "bed_overlap": bed_overlap,
+        "bed_overlap_fraction": bed_overlap / len(seen) if seen else 0.0,
+    }
+
+
+def audit_cutar_pair(
+    pair: SamplePair, data_dir: Path, bed_ids: set[str], min_overlap: float = 0.8
+) -> dict:
+    gene_path = data_dir / pair.gene_file
+    cutar_path = data_dir / pair.cutar_file
+    info = inspect_text_matrix(cutar_path)
+    if info.orientation != "features_by_cells":
+        raise ValueError(
+            f"{pair.sample_id}: expected features_by_cells, got {info.orientation}"
+        )
+    layout = _text_matrix_layout(cutar_path)
+    gene_barcodes = read_10x_barcodes(gene_path)
+    cutar_barcodes = layout["cell_ids"]
+    strategy, gene_idx, cutar_idx = match_barcodes(gene_barcodes, cutar_barcodes)
+    matched = len(gene_idx)
+    gene_fraction = matched / len(gene_barcodes)
+    cutar_fraction = matched / len(cutar_barcodes)
+    feature_stats = scan_cutar_feature_ids(cutar_path, bed_ids)
+    failures = []
+    if gene_fraction < min_overlap or cutar_fraction < min_overlap:
+        failures.append(
+            f"barcode overlap below {min_overlap:.2f} "
+            f"(gene={gene_fraction:.3f}, cuTAR={cutar_fraction:.3f})"
+        )
+    if feature_stats["duplicate_cutar_ids"]:
+        failures.append(f"{feature_stats['duplicate_cutar_ids']} duplicate cuTAR IDs")
+    if feature_stats["bed_overlap_fraction"] < 0.95:
+        failures.append(
+            "BED overlap below 0.95 "
+            f"({feature_stats['bed_overlap_fraction']:.3f})"
+        )
+    return {
+        "sample_id": pair.sample_id,
+        "gene_file": pair.gene_file,
+        "cutar_file": pair.cutar_file,
+        "status": "FAIL" if failures else "PASS",
+        "orientation": info.orientation,
+        "header_style": info.header_style,
+        "n_cutars": feature_stats["n_cutars"],
+        "n_cutar_cells": len(cutar_barcodes),
+        "n_gene_cells": len(gene_barcodes),
+        "barcode_strategy": strategy,
+        "matched_cells": matched,
+        "gene_match_fraction": gene_fraction,
+        "cutar_match_fraction": cutar_fraction,
+        **feature_stats,
+        "row_cutar_fraction": info.row_cutar_fraction,
+        "column_barcode_fraction": info.column_barcode_fraction,
+        "error": "; ".join(failures),
+    }
 
 
 def combine_sample(pair: SamplePair, data_dir: Path) -> tuple[ad.AnnData, dict]:
@@ -303,6 +498,7 @@ def audit_h5ad(path: Path) -> dict:
 
 
 def run_audit(data_dir: Path, review_dir: Path, pairs: list[SamplePair]) -> None:
+    LOG.info("starting SPanC-Lnc enhanced audit: %s", data_dir)
     review_dir.mkdir(parents=True, exist_ok=True)
     (review_dir / "metrics").mkdir(exist_ok=True)
     (review_dir / "manifests").mkdir(exist_ok=True)
@@ -342,16 +538,33 @@ def run_audit(data_dir: Path, review_dir: Path, pairs: list[SamplePair]) -> None
                 }
             )
     rows.extend(audit_h5ad(p) for p in sorted(data_dir.glob("*.h5ad")))
+    bed_path = data_dir / "00_cuTARs.bed"
+    if not bed_path.is_file():
+        raise FileNotFoundError(bed_path)
+    bed_ids = load_bed_feature_ids(bed_path)
+    LOG.info("loaded %d unique cuTAR IDs from %s", len(bed_ids), bed_path.name)
     pair_rows = []
     for pair in pairs:
         try:
-            info = inspect_text_matrix(data_dir / pair.cutar_file)
-            pair_rows.append({"sample_id": pair.sample_id, **asdict(info), "status": "PASS"})
+            result = audit_cutar_pair(pair, data_dir, bed_ids)
+            pair_rows.append(result)
+            LOG.info(
+                "audit %s status=%s matched=%s gene_fraction=%.3f "
+                "cutar_fraction=%.3f bed_fraction=%.3f",
+                pair.sample_id,
+                result["status"],
+                result["matched_cells"],
+                result["gene_match_fraction"],
+                result["cutar_match_fraction"],
+                result["bed_overlap_fraction"],
+            )
         except Exception as exc:
+            LOG.exception("audit %s failed", pair.sample_id)
             pair_rows.append(
                 {
                     "sample_id": pair.sample_id,
-                    "path": pair.cutar_file,
+                    "gene_file": pair.gene_file,
+                    "cutar_file": pair.cutar_file,
                     "status": "FAIL",
                     "error": str(exc),
                 }
@@ -373,6 +586,21 @@ def run_audit(data_dir: Path, review_dir: Path, pairs: list[SamplePair]) -> None
     ]
     pd.DataFrame(manifest).to_csv(
         review_dir / "manifests/spanc_lnc_file_manifest.tsv", sep="\t", index=False
+    )
+    pair_pass = bool(pair_rows) and all(row["status"] == "PASS" for row in pair_rows)
+    matrix_pass = bool(rows) and all(row["status"] == "PASS" for row in rows)
+    marker = (
+        "PASS_SPANCLNC_ENHANCED_AUDIT_READY_FOR_BUILD"
+        if pair_pass and matrix_pass
+        else "HOLD_BUILD_ENHANCED_AUDIT_FAILED"
+    )
+    LOG.info(
+        "%s pair_pass=%s matrix_pass=%s pair_count=%d matrix_checks=%d",
+        marker,
+        pair_pass,
+        matrix_pass,
+        len(pair_rows),
+        len(rows),
     )
 
 
