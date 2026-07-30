@@ -1,0 +1,35 @@
+{
+  "inputs": {
+    "feature_qc": {
+      "fingerprint": "604934bacce25b57c86395238dd225b627915f83b0798383f389b7503cbe9b89",
+      "name": "spanc_lnc_feature_qc.tsv.gz"
+    },
+    "gtf": {
+      "fingerprint": "465a8decc3d0c7c498baefd5875dd32f0c107401181b04ef5a0204a69e75d799",
+      "name": "gencode.v50.annotation.gtf.gz"
+    },
+    "reference": {
+      "fingerprint": "ed3382c9b0e36c5926cd0aeea2be6106c479fce3a02ef183dc8fffcae1bfab51",
+      "name": "acral_melanoma_gene_cutar_combined.h5ad"
+    }
+  },
+  "outputs": {
+    "annotated_feature_qc": "annotated_feature_qc.tsv.gz",
+    "masked_gene_folds": "masked_gene_folds.tsv",
+    "target_catalog": "target_catalog.tsv.gz"
+  },
+  "packages": {
+    "anndata": "0.12.10",
+    "numpy": "2.4.3",
+    "pandas": "2.3.3",
+    "scanpy": "1.11.5",
+    "scipy": "1.17.1",
+    "torch": "2.6.0+cu124"
+  },
+  "platform": "Linux-4.18.0-305.3.1.el8_4.x86_64-x86_64-with-glibc2.27",
+  "python": "3.11.13",
+  "schema_version": "0.1",
+  "seed": 0,
+  "stage": "week1_prepare",
+  "status": "PASS"
+}

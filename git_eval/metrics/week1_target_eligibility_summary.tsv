@@ -1,0 +1,4 @@
+eligibility	targets	median_total_counts	median_detected_cells	median_supported_samples
+eligible	17795	145.0	130.0	3.0
+exploratory	25576	25.0	21.0	1.0
+insufficient_reference_signal	11	0.0	0.0	1.0

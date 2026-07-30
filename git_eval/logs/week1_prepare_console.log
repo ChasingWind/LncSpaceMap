@@ -1,0 +1,8 @@
+/home/bio_yinshuwei/Spatial/LncSpaceMap/src/lncspacemap/pipeline/week1.py:88: DtypeWarning: Columns (10,11,12,13,14,17) have mixed types. Specify dtype option on import or set low_memory=False.
+  feature_qc = pd.read_csv(feature_qc_path, sep="\t", index_col=0)
+2026-07-30 16:13:43,500 INFO PASS_WEEK1_P0_P2_READY_FOR_BASELINES eligible_targets=17795 proxy_genes=250
+
+elapsed_seconds=24.307
+user_seconds=22.471
+system_seconds=0.857
+week1_prepare_exit_code=0
