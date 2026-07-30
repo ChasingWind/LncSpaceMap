@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import warnings
+
 import numpy as np
 import pandas as pd
 from scipy import sparse
@@ -16,6 +18,37 @@ def _log_normalize_subset(matrix, library_totals, target_sum: float = 1e4) -> np
     matrix = sparse.diags(scale) @ matrix
     matrix.data = np.log1p(matrix.data)
     return matrix.toarray().astype(np.float32, copy=False)
+
+
+def _bind_spage_axes(
+    predicted,
+    spot_names: pd.Index,
+    targets: list[str],
+) -> pd.DataFrame:
+    """Bind SpaGE's positional rows to spatial barcodes after strict checks.
+
+    The upstream SpaGE function constructs its return frame without an index,
+    even when its spatial input has named rows. Its row loop nevertheless
+    preserves the input order, so positional binding is the correct contract.
+    """
+    if not isinstance(predicted, pd.DataFrame):
+        predicted = pd.DataFrame(predicted)
+    expected_shape = (len(spot_names), len(targets))
+    if predicted.shape != expected_shape:
+        raise ValueError(
+            f"SpaGE returned shape {predicted.shape}; expected {expected_shape}"
+        )
+    if predicted.columns.has_duplicates:
+        raise ValueError("SpaGE returned duplicate target columns")
+    if set(predicted.columns.astype(str)) != set(targets):
+        raise ValueError(
+            "SpaGE returned target columns that differ from requested targets"
+        )
+    predicted = predicted.loc[:, targets].copy()
+    predicted.index = pd.Index(spot_names, copy=True)
+    if not predicted.index.is_unique:
+        raise ValueError("spatial barcodes are not unique")
+    return predicted.astype(np.float32)
 
 
 def run_spage(reference, spatial, anchors: list[str], targets: list[str], *, n_pv=30):
@@ -50,12 +83,18 @@ def run_spage(reference, spatial, anchors: list[str], targets: list[str], *, n_p
         index=spatial.obs_names,
         columns=anchors,
     )
-    predicted = SpaGE(
-        Spatial_data=spatial_data,
-        RNA_data=rna,
-        n_pv=min(int(n_pv), len(anchors)),
-        genes_to_predict=targets,
-    )
-    predicted = predicted.loc[spatial.obs_names, targets].astype(np.float32)
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore",
+            message=r"The behavior of DataFrame\.var with axis=None is deprecated.*",
+            category=FutureWarning,
+        )
+        predicted = SpaGE(
+            Spatial_data=spatial_data,
+            RNA_data=rna,
+            n_pv=min(int(n_pv), len(anchors)),
+            genes_to_predict=targets,
+        )
+    predicted = _bind_spage_axes(predicted, spatial.obs_names, targets)
     predicted[predicted < 0] = 0
     return predicted
