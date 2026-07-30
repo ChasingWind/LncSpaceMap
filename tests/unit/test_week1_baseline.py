@@ -5,6 +5,7 @@ from scipy import sparse
 
 from lncspacemap.evaluation.minimal import evaluate_predictions
 from lncspacemap.io.spatial import validate_spatial_counts
+from lncspacemap.mapping.backends.spage import _bind_spage_axes
 from lncspacemap.preprocessing.anchors import select_shared_anchors
 from lncspacemap.preprocessing.proxies import build_spatial_proxy_folds
 
@@ -95,3 +96,29 @@ def test_spatial_proxy_fallback_is_evaluable_balanced_and_deterministic():
     assert first.index.tolist() == second.index.tolist()
     assert first.groupby("fold").size().tolist() == [4, 4, 4, 4, 4]
     assert first["spatial_detected_spots"].ge(3).all()
+
+
+def test_spage_range_index_is_bound_to_spatial_order():
+    upstream = pd.DataFrame(
+        [[1.0, 2.0], [3.0, 4.0]],
+        columns=["TARGET_B", "TARGET_A"],
+    )
+    spots = pd.Index(["spot-2", "spot-1"])
+    bound = _bind_spage_axes(upstream, spots, ["TARGET_A", "TARGET_B"])
+    assert bound.index.tolist() == ["spot-2", "spot-1"]
+    assert bound.columns.tolist() == ["TARGET_A", "TARGET_B"]
+    assert bound.loc["spot-2", "TARGET_A"] == 2.0
+
+
+def test_spage_axis_binding_rejects_shape_mismatch():
+    upstream = pd.DataFrame([[1.0]], columns=["TARGET_A"])
+    try:
+        _bind_spage_axes(
+            upstream,
+            pd.Index(["spot-1", "spot-2"]),
+            ["TARGET_A"],
+        )
+    except ValueError as error:
+        assert "expected (2, 1)" in str(error)
+    else:
+        raise AssertionError("shape mismatch was not rejected")
