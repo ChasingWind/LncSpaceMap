@@ -44,15 +44,25 @@ def test_anchor_selection_excludes_masked_target():
 
 def test_spatial_contract_and_minimal_metrics():
     genes = ["A", "B"]
-    spatial = _adata([[1, 0], [2, 1], [3, 2]], genes, "s")
-    spatial.obsm["spatial"] = np.array([[0, 0], [1, 1], [2, 2]], dtype=float)
+    spatial = _adata([[0, 0], [2, 1], [0, 2], [3, 0]], genes, "s")
+    spatial.obsm["spatial"] = np.array(
+        [[0, 0], [1, 1], [2, 2], [3, 3]], dtype=float
+    )
     assert validate_spatial_counts(spatial)["status"] == "PASS"
-    truth = pd.DataFrame({"A": [1, 2, 3]}, index=spatial.obs_names)
+    truth = pd.DataFrame({"A": [0, 2, 0, 3]}, index=spatial.obs_names)
     predicted = truth.copy()
-    per_gene, summary = evaluate_predictions(predicted, truth)
+    per_gene, summary = evaluate_predictions(
+        predicted, truth, n_permutations=19, seed=7
+    )
     assert per_gene.loc["A", "spearman"] == 1
+    assert per_gene.loc["A", "pearson"] == 1
     assert per_gene.loc["A", "z_nrmse"] == 0
+    assert per_gene.loc["A", "detection_auroc"] == 1
+    assert per_gene.loc["A", "detection_auprc"] == 1
+    assert per_gene.loc["A", "topk_recall"] == 1
+    assert 0 < per_gene.loc["A", "spearman_permutation_p"] <= 1
     assert summary["targets"] == 1
+    assert summary["permutations"] == 19
 
 
 def test_spatial_proxy_fallback_is_evaluable_balanced_and_deterministic():
