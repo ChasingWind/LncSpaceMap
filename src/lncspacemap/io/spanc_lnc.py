@@ -620,8 +620,6 @@ def run_audit(data_dir: Path, review_dir: Path, pairs: list[SamplePair]) -> None
 def build_references(
     data_dir: Path, output_dir: Path, review_dir: Path, pairs: list[SamplePair]
 ) -> None:
-    import anndata as ad
-
     output_dir.mkdir(parents=True, exist_ok=True)
     metrics = []
     objects = []
@@ -631,22 +629,350 @@ def build_references(
         obj.write_h5ad(output_dir / f"{pair.sample_id}.gene_cutar.h5ad", compression="lzf")
         objects.append(obj)
         metrics.append(row)
-    combined = ad.concat(
-        objects,
-        axis=0,
-        join="outer",
-        merge="same",
-        label="sample_batch",
-        keys=[p.sample_id for p in pairs],
-        index_unique=":",
-        fill_value=0,
-    )
-    combined.layers["counts"] = combined.X.copy()
-    combined.write_h5ad(
-        output_dir / "acral_melanoma_gene_cutar_combined.h5ad", compression="lzf"
-    )
+    finalize_reference_objects(objects, pairs, data_dir, output_dir, review_dir)
     review_dir.mkdir(parents=True, exist_ok=True)
     (review_dir / "metrics").mkdir(exist_ok=True)
     pd.DataFrame(metrics).to_csv(
         review_dir / "metrics/spanc_lnc_reference_build.tsv", sep="\t", index=False
     )
+
+
+def _load_cutar_bed(path: Path) -> pd.DataFrame:
+    bed = pd.read_csv(
+        path,
+        sep="\t",
+        header=None,
+        usecols=[0, 1, 2, 3, 5],
+        names=["chrom", "start", "end", "feature_id", "strand"],
+        dtype={
+            "chrom": str,
+            "start": np.int64,
+            "end": np.int64,
+            "feature_id": str,
+            "strand": str,
+        },
+    )
+    if bed["feature_id"].duplicated().any():
+        duplicates = int(bed["feature_id"].duplicated().sum())
+        raise ValueError(f"{path.name}: {duplicates} duplicate BED feature IDs")
+    return bed.set_index("feature_id")
+
+
+def _feature_catalog(objects: list, pairs: list[SamplePair], bed_path: Path) -> pd.DataFrame:
+    all_features = pd.Index(
+        sorted({str(feature) for obj in objects for feature in obj.var_names}),
+        name="feature_id",
+    )
+    catalog = pd.DataFrame(index=all_features)
+    feature_types: dict[str, str] = {}
+    metadata: dict[str, dict[str, object]] = {
+        column: {}
+        for column in ("gene_symbol", "gene_ids", "feature_types", "genome")
+    }
+    quantified = np.zeros(len(all_features), dtype=np.int16)
+
+    for obj, pair in zip(objects, pairs, strict=True):
+        if "feature_type" not in obj.var:
+            raise ValueError(f"{pair.sample_id}: feature_type missing from sample H5AD")
+        positions = all_features.get_indexer(obj.var_names.astype(str))
+        if (positions < 0).any():
+            raise RuntimeError(f"{pair.sample_id}: internal feature indexing failure")
+        quantified[positions] += 1
+        catalog[f"quantified_{pair.sample_id}"] = False
+        catalog.iloc[positions, catalog.columns.get_loc(f"quantified_{pair.sample_id}")] = True
+        for feature_id, feature_type in zip(
+            obj.var_names.astype(str), obj.var["feature_type"].astype(str), strict=True
+        ):
+            previous = feature_types.setdefault(feature_id, feature_type)
+            if previous != feature_type:
+                raise ValueError(
+                    f"{feature_id}: conflicting feature types {previous!r}/{feature_type!r}"
+                )
+        for column, values in metadata.items():
+            if column not in obj.var:
+                continue
+            for feature_id, value in obj.var[column].items():
+                if pd.notna(value) and str(feature_id) not in values:
+                    values[str(feature_id)] = value
+
+    catalog["feature_type"] = [feature_types.get(feature, "") for feature in all_features]
+    catalog["quantified_sample_count"] = quantified
+    catalog["quantified_sample_fraction"] = (
+        quantified.astype(np.float32) / len(pairs)
+    )
+    for column, values in metadata.items():
+        if values:
+            catalog[column] = [values.get(feature, np.nan) for feature in all_features]
+
+    bed = _load_cutar_bed(bed_path)
+    for column in ("chrom", "start", "end", "strand"):
+        catalog[column] = bed[column].reindex(all_features).to_numpy()
+    is_cutar = catalog["feature_type"].eq("cuTAR")
+    missing_bed = int(catalog.loc[is_cutar, "chrom"].isna().sum())
+    if missing_bed:
+        raise ValueError(f"{missing_bed} combined cuTAR features lack BED coordinates")
+    return catalog
+
+
+def _to_csr(matrix) -> sp.csr_matrix:
+    return matrix.tocsr() if sp.issparse(matrix) else sp.csr_matrix(matrix)
+
+
+def _assign_cutar_tiers(
+    detected_cells: np.ndarray,
+    quantified_cells: np.ndarray,
+    quantified_samples: np.ndarray,
+) -> np.ndarray:
+    prevalence = np.divide(
+        detected_cells,
+        quantified_cells,
+        out=np.zeros_like(detected_cells, dtype=np.float64),
+        where=quantified_cells > 0,
+    )
+    tiers = np.full(len(detected_cells), "excluded", dtype=object)
+    tiers[detected_cells > 0] = "all_detected"
+    extended = (
+        (quantified_samples >= 2) & (detected_cells >= 10) & (prevalence >= 0.001)
+    )
+    core = (
+        (quantified_samples >= 3) & (detected_cells >= 30) & (prevalence >= 0.001)
+    )
+    tiers[extended] = "extended"
+    tiers[core] = "core"
+    return tiers
+
+
+def _write_reference_qc(
+    objects: list,
+    pairs: list[SamplePair],
+    combined,
+    output_dir: Path,
+    review_dir: Path,
+) -> None:
+    qc_dir = output_dir / "qc"
+    qc_dir.mkdir(parents=True, exist_ok=True)
+    (review_dir / "metrics").mkdir(parents=True, exist_ok=True)
+
+    feature_index = combined.var_names
+    detected_cells = np.zeros(combined.n_vars, dtype=np.int64)
+    total_counts = np.zeros(combined.n_vars, dtype=np.float64)
+    quantified_cells = np.zeros(combined.n_vars, dtype=np.int64)
+    cell_frames = []
+    sample_rows = []
+
+    for obj, pair in zip(objects, pairs, strict=True):
+        matrix = _to_csr(obj.layers["counts"] if "counts" in obj.layers else obj.X)
+        types = obj.var["feature_type"].astype(str).to_numpy()
+        gene_mask = types == "gene"
+        cutar_mask = types == "cuTAR"
+        gene_matrix = matrix[:, gene_mask]
+        cutar_matrix = matrix[:, cutar_mask]
+        gene_counts = np.asarray(gene_matrix.sum(axis=1)).ravel()
+        cutar_counts = np.asarray(cutar_matrix.sum(axis=1)).ravel()
+        detected_genes = np.diff(gene_matrix.indptr)
+        detected_cutars = np.diff(cutar_matrix.indptr)
+        total = gene_counts + cutar_counts
+
+        cell_frames.append(
+            pd.DataFrame(
+                {
+                    "sample_id": pair.sample_id,
+                    "cell_id": obj.obs_names.astype(str),
+                    "gene_counts": gene_counts,
+                    "cutar_counts": cutar_counts,
+                    "detected_genes": detected_genes,
+                    "detected_cutars": detected_cutars,
+                    "cutar_count_fraction": np.divide(
+                        cutar_counts,
+                        total,
+                        out=np.zeros_like(cutar_counts, dtype=np.float64),
+                        where=total > 0,
+                    ),
+                }
+            )
+        )
+        sample_rows.append(
+            {
+                "sample_id": pair.sample_id,
+                "cells": obj.n_obs,
+                "median_gene_counts": float(np.median(gene_counts)),
+                "median_cutar_counts": float(np.median(cutar_counts)),
+                "median_detected_genes": float(np.median(detected_genes)),
+                "median_detected_cutars": float(np.median(detected_cutars)),
+                "zero_cutar_cell_fraction": float(np.mean(detected_cutars == 0)),
+                "median_cutar_count_fraction": float(
+                    np.median(
+                        np.divide(
+                            cutar_counts,
+                            total,
+                            out=np.zeros_like(cutar_counts, dtype=np.float64),
+                            where=total > 0,
+                        )
+                    )
+                ),
+            }
+        )
+
+        sample_csc = matrix.tocsc()
+        positions = feature_index.get_indexer(obj.var_names)
+        detected_cells[positions] += np.diff(sample_csc.indptr)
+        total_counts[positions] += np.asarray(sample_csc.sum(axis=0)).ravel()
+        quantified_cells[positions] += obj.n_obs
+
+    cell_qc = pd.concat(cell_frames, ignore_index=True)
+    cell_qc.to_csv(qc_dir / "spanc_lnc_cell_qc.tsv.gz", sep="\t", index=False)
+
+    feature_qc = combined.var.copy()
+    feature_qc["detected_cells"] = detected_cells
+    feature_qc["quantified_cells"] = quantified_cells
+    feature_qc["detected_cell_fraction"] = np.divide(
+        detected_cells,
+        quantified_cells,
+        out=np.zeros_like(detected_cells, dtype=np.float64),
+        where=quantified_cells > 0,
+    )
+    feature_qc["total_counts"] = total_counts
+    feature_qc["mean_count_in_quantified_cells"] = np.divide(
+        total_counts,
+        quantified_cells,
+        out=np.zeros_like(total_counts),
+        where=quantified_cells > 0,
+    )
+    feature_qc["selection_tier"] = "gene"
+    cutar_mask = feature_qc["feature_type"].eq("cuTAR").to_numpy()
+    feature_qc.loc[cutar_mask, "selection_tier"] = _assign_cutar_tiers(
+        detected_cells[cutar_mask],
+        quantified_cells[cutar_mask],
+        feature_qc.loc[cutar_mask, "quantified_sample_count"].to_numpy(),
+    )
+    feature_qc.to_csv(qc_dir / "spanc_lnc_feature_qc.tsv.gz", sep="\t")
+
+    sample_summary = pd.DataFrame(sample_rows)
+    sample_summary.to_csv(
+        review_dir / "metrics/spanc_lnc_reference_cell_qc_summary.tsv",
+        sep="\t",
+        index=False,
+    )
+    tier_summary = (
+        feature_qc.loc[cutar_mask]
+        .groupby("selection_tier", observed=True)
+        .agg(
+            cutars=("selection_tier", "size"),
+            median_detected_cells=("detected_cells", "median"),
+            median_quantified_samples=("quantified_sample_count", "median"),
+            total_counts=("total_counts", "sum"),
+        )
+        .reset_index()
+    )
+    tier_summary.to_csv(
+        review_dir / "metrics/spanc_lnc_cutar_tier_summary.tsv",
+        sep="\t",
+        index=False,
+    )
+
+    gene_count = int(feature_qc["feature_type"].eq("gene").sum())
+    cutar_count = int(cutar_mask.sum())
+    bed_fraction = float(feature_qc.loc[cutar_mask, "chrom"].notna().mean())
+    contract_pass = all(
+        (
+            gene_count > 0,
+            cutar_count > 0,
+            "counts" in combined.layers,
+            combined.obs_names.is_unique,
+            combined.var_names.is_unique,
+            bed_fraction == 1.0,
+        )
+    )
+    contract = pd.DataFrame(
+        [
+            {
+                "status": "PASS" if contract_pass else "FAIL",
+                "cells": combined.n_obs,
+                "features": combined.n_vars,
+                "genes": gene_count,
+                "cutars": cutar_count,
+                "has_counts_layer": "counts" in combined.layers,
+                "unique_obs_names": combined.obs_names.is_unique,
+                "unique_var_names": combined.var_names.is_unique,
+                "cutars_with_bed_fraction": bed_fraction,
+                "detailed_cell_qc": str(qc_dir / "spanc_lnc_cell_qc.tsv.gz"),
+                "detailed_feature_qc": str(qc_dir / "spanc_lnc_feature_qc.tsv.gz"),
+            }
+        ]
+    )
+    contract.to_csv(
+        review_dir / "metrics/spanc_lnc_combined_contract.tsv",
+        sep="\t",
+        index=False,
+    )
+    if not contract_pass:
+        raise ValueError("combined reference failed the finalized data contract")
+
+
+def finalize_reference_objects(
+    objects: list,
+    pairs: list[SamplePair],
+    data_dir: Path,
+    output_dir: Path,
+    review_dir: Path,
+) -> None:
+    import anndata as ad
+
+    catalog = _feature_catalog(objects, pairs, data_dir / "00_cuTARs.bed")
+    combined = ad.concat(
+        objects,
+        axis=0,
+        join="outer",
+        merge=None,
+        label="sample_batch",
+        keys=[p.sample_id for p in pairs],
+        index_unique=":",
+        fill_value=0,
+    )
+    combined.var = catalog.reindex(combined.var_names).copy()
+    combined.layers["counts"] = combined.X.copy()
+    combined.uns["lncspacemap_reference"] = {
+        "schema_version": "0.2",
+        "feature_missingness": (
+            "quantified_<sample> marks whether a feature was present in the "
+            "source sample matrix; zero-fill must be interpreted with this mask"
+        ),
+        "sample_ids": [pair.sample_id for pair in pairs],
+        "counts_source": "layers/counts",
+    }
+    _write_reference_qc(objects, pairs, combined, output_dir, review_dir)
+    destination = output_dir / "acral_melanoma_gene_cutar_combined.h5ad"
+    temporary = output_dir / "acral_melanoma_gene_cutar_combined.tmp.h5ad"
+    combined.write_h5ad(temporary, compression="lzf")
+    check = ad.read_h5ad(temporary, backed="r")
+    try:
+        if (
+            check.shape != combined.shape
+            or "counts" not in check.layers
+            or "feature_type" not in check.var
+            or "quantified_sample_count" not in check.var
+        ):
+            raise ValueError("serialized combined reference failed read-back validation")
+    finally:
+        check.file.close()
+    temporary.replace(destination)
+    LOG.info(
+        "PASS_SPANCLNC_REFERENCE_QC_READY_FOR_ANNOTATION cells=%d features=%d",
+        combined.n_obs,
+        combined.n_vars,
+    )
+
+
+def finalize_references(
+    data_dir: Path, output_dir: Path, review_dir: Path, pairs: list[SamplePair]
+) -> None:
+    import anndata as ad
+
+    objects = []
+    for pair in pairs:
+        path = output_dir / f"{pair.sample_id}.gene_cutar.h5ad"
+        if not path.is_file():
+            raise FileNotFoundError(path)
+        LOG.info("loading built reference %s", path.name)
+        objects.append(ad.read_h5ad(path))
+    finalize_reference_objects(objects, pairs, data_dir, output_dir, review_dir)
