@@ -6,6 +6,7 @@ from scipy import sparse
 from lncspacemap.evaluation.minimal import evaluate_predictions
 from lncspacemap.io.spatial import validate_spatial_counts
 from lncspacemap.preprocessing.anchors import select_shared_anchors
+from lncspacemap.preprocessing.proxies import build_spatial_proxy_folds
 
 
 def _adata(matrix, genes, prefix):
@@ -50,3 +51,47 @@ def test_spatial_contract_and_minimal_metrics():
     assert per_gene.loc["A", "spearman"] == 1
     assert per_gene.loc["A", "z_nrmse"] == 0
     assert summary["targets"] == 1
+
+
+def test_spatial_proxy_fallback_is_evaluable_balanced_and_deterministic():
+    genes = [f"ENSG{i:03d}" for i in range(30)]
+    rng = np.random.default_rng(1)
+    reference = _adata(rng.poisson(1, (40, len(genes))), genes, "c")
+    spatial_matrix = np.zeros((20, len(genes)), dtype=np.float32)
+    for index in range(len(genes)):
+        spatial_matrix[: 3 + index % 2, index] = 1
+    spatial = _adata(spatial_matrix, genes, "s")
+    annotated = pd.DataFrame(
+        {
+            "feature_type": "gene",
+            "gene_type": "protein_coding",
+            "total_counts": np.arange(200, 230),
+            "detected_cells": np.arange(180, 210),
+        },
+        index=genes,
+    )
+    original = annotated.iloc[:10].copy()
+    original["fold"] = np.arange(10) % 5
+    first = build_spatial_proxy_folds(
+        reference,
+        spatial,
+        annotated,
+        original,
+        n_folds=5,
+        genes_per_fold=4,
+        min_detected_spots=3,
+        max_detected_fraction=0.25,
+    )
+    second = build_spatial_proxy_folds(
+        reference,
+        spatial,
+        annotated,
+        original,
+        n_folds=5,
+        genes_per_fold=4,
+        min_detected_spots=3,
+        max_detected_fraction=0.25,
+    )
+    assert first.index.tolist() == second.index.tolist()
+    assert first.groupby("fold").size().tolist() == [4, 4, 4, 4, 4]
+    assert first["spatial_detected_spots"].ge(3).all()
