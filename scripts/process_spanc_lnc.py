@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from lncspacemap.io.spanc_lnc import (  # noqa: E402
     build_references,
+    finalize_references,
     load_sample_pairs,
     run_audit,
 )
@@ -20,7 +21,7 @@ from lncspacemap.io.spanc_lnc import (  # noqa: E402
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("mode", choices=["audit", "build", "all"])
+    parser.add_argument("mode", choices=["audit", "build", "finalize", "all"])
     parser.add_argument(
         "--data-dir",
         type=Path,
@@ -67,6 +68,8 @@ def main() -> int:
         run_audit(args.data_dir, args.review_dir, pairs)
     if args.mode in {"build", "all"}:
         build_references(args.data_dir, args.output_dir, args.review_dir, pairs)
+    if args.mode == "finalize":
+        finalize_references(args.data_dir, args.output_dir, args.review_dir, pairs)
     return 0
 
 
