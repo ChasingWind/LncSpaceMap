@@ -1,0 +1,8 @@
+file	cells	features	genes	cutars	has_counts_layer	unique_obs_names	unique_var_names	file_gib
+AM1.gene_cutar.h5ad	6663	60315	33538	26777	True	True	True	0.142
+AM2.gene_cutar.h5ad	2497	47852	33538	14314	True	True	True	0.068
+AM3_post.gene_cutar.h5ad	12681	47768	33538	14230	True	True	True	0.31
+AM3_pre.gene_cutar.h5ad	13819	46216	33538	12678	True	True	True	0.321
+AM5.gene_cutar.h5ad	9801	42495	33538	8957	True	True	True	0.236
+AM6.gene_cutar.h5ad	11096	41252	33538	7714	True	True	True	0.272
+acral_melanoma_gene_cutar_combined.h5ad	56557	76920			True	True	True	1.328

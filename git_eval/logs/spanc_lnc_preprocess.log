@@ -13,3 +13,16 @@
 2026-07-30 09:31:56,496 INFO barcode strategy=sequence16 overlap=11096
 2026-07-30 09:31:57,156 INFO audit AM6 status=PASS matched=11096 gene_fraction=0.997 cutar_fraction=0.937 bed_fraction=1.000
 2026-07-30 09:31:57,168 INFO PASS_SPANCLNC_ENHANCED_AUDIT_READY_FOR_BUILD pair_pass=True matrix_pass=True pair_count=6 matrix_checks=17
+2026-07-30 11:07:26,453 INFO building AM1
+2026-07-30 11:19:39,264 INFO building AM1
+2026-07-30 11:22:27,768 INFO barcode strategy=sequence16 overlap=6663
+2026-07-30 11:22:29,408 INFO building AM2
+2026-07-30 11:23:00,888 INFO barcode strategy=sequence16 overlap=2497
+2026-07-30 11:23:02,021 INFO building AM3_pre
+2026-07-30 11:25:40,930 INFO barcode strategy=sequence16 overlap=13819
+2026-07-30 11:25:43,801 INFO building AM3_post
+2026-07-30 11:28:46,723 INFO barcode strategy=sequence16 overlap=12681
+2026-07-30 11:28:49,560 INFO building AM5
+2026-07-30 11:30:14,689 INFO barcode strategy=sequence16 overlap=9801
+2026-07-30 11:30:17,099 INFO building AM6
+2026-07-30 11:31:36,008 INFO barcode strategy=sequence16 overlap=11096
