@@ -106,6 +106,9 @@ def run_week1_prepare(
     annotated.to_csv(output_dir / "annotated_feature_qc.tsv.gz", sep="\t")
     targets.to_csv(output_dir / "target_catalog.tsv.gz", sep="\t")
     proxies.to_csv(output_dir / "masked_gene_folds.tsv", sep="\t")
+    proxies.to_csv(
+        review_dir / "manifests/week1_masked_gene_folds.tsv", sep="\t"
+    )
 
     target_summary = (
         targets.groupby("eligibility", observed=True)
