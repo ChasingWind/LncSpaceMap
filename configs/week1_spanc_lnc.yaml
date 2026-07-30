@@ -1,0 +1,25 @@
+schema_version: "0.1"
+
+project:
+  seed: 0
+
+reference:
+  counts_source: counts
+  sample_key: sample
+
+annotation:
+  species: human
+  genome_build: GRCh38.p14
+  gencode_release: 50
+  strip_ensembl_version: true
+  min_gene_id_coverage: 0.90
+
+eligibility:
+  min_total_counts: 20
+  min_detected_cells: 10
+  min_detected_fraction: 0.002
+  min_supported_samples: 2
+
+masking:
+  proxy_genes: 250
+  folds: 5
