@@ -26,3 +26,10 @@
 2026-07-30 11:30:14,689 INFO barcode strategy=sequence16 overlap=9801
 2026-07-30 11:30:17,099 INFO building AM6
 2026-07-30 11:31:36,008 INFO barcode strategy=sequence16 overlap=11096
+2026-07-30 15:02:12,879 INFO loading built reference AM1.gene_cutar.h5ad
+2026-07-30 15:02:13,894 INFO loading built reference AM2.gene_cutar.h5ad
+2026-07-30 15:02:14,396 INFO loading built reference AM3_pre.gene_cutar.h5ad
+2026-07-30 15:02:16,444 INFO loading built reference AM3_post.gene_cutar.h5ad
+2026-07-30 15:02:18,461 INFO loading built reference AM5.gene_cutar.h5ad
+2026-07-30 15:02:20,051 INFO loading built reference AM6.gene_cutar.h5ad
+2026-07-30 15:02:44,206 INFO PASS_SPANCLNC_REFERENCE_QC_READY_FOR_ANNOTATION cells=56557 features=76920

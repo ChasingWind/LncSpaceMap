@@ -1,0 +1,19 @@
+2026-07-30 15:02:12,879 INFO loading built reference AM1.gene_cutar.h5ad
+2026-07-30 15:02:13,894 INFO loading built reference AM2.gene_cutar.h5ad
+2026-07-30 15:02:14,396 INFO loading built reference AM3_pre.gene_cutar.h5ad
+2026-07-30 15:02:16,444 INFO loading built reference AM3_post.gene_cutar.h5ad
+2026-07-30 15:02:18,461 INFO loading built reference AM5.gene_cutar.h5ad
+2026-07-30 15:02:20,051 INFO loading built reference AM6.gene_cutar.h5ad
+... storing 'feature_type' as categorical
+... storing 'gene_symbol' as categorical
+... storing 'gene_ids' as categorical
+... storing 'feature_types' as categorical
+... storing 'genome' as categorical
+... storing 'chrom' as categorical
+... storing 'strand' as categorical
+2026-07-30 15:02:44,206 INFO PASS_SPANCLNC_REFERENCE_QC_READY_FOR_ANNOTATION cells=56557 features=76920
+
+elapsed_seconds=32.490
+user_seconds=25.153
+system_seconds=3.641
+finalize_exit_code=0

@@ -1,0 +1,5 @@
+selection_tier	cutars	median_detected_cells	median_quantified_samples	total_counts
+all_detected	23819	20.0	1.0	1133819.0
+core	10686	202.0	4.0	6746195.0
+excluded	11	0.0	1.0	0.0
+extended	8866	60.0	2.0	1218352.0

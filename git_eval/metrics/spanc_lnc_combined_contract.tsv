@@ -1,0 +1,2 @@
+status	cells	features	genes	cutars	has_counts_layer	unique_obs_names	unique_var_names	cutars_with_bed_fraction	detailed_cell_qc	detailed_feature_qc
+PASS	56557	76920	33538	43382	True	True	True	1.0	/home/bio_yinshuwei/Spatial/data/Spanc-Lnc/processed/reference/qc/spanc_lnc_cell_qc.tsv.gz	/home/bio_yinshuwei/Spatial/data/Spanc-Lnc/processed/reference/qc/spanc_lnc_feature_qc.tsv.gz
