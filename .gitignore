@@ -88,6 +88,10 @@ dist/
 /cache/
 /tmp/
 
+# Local-only imported/generated review results.
+# Code may write here, but nothing under this directory is synchronized.
+/import_result/
+
 # Lightweight review artifacts belong only in git_eval
 *.csv
 *.tsv
