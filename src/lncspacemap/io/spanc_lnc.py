@@ -190,7 +190,13 @@ def read_cutar_matrix(path: Path, chunk_rows: int = 64):
         "sep": sep,
         "chunksize": chunk_rows,
         "index_col": 0,
-        "dtype": np.float32,
+        # Pandas applies a scalar dtype before index_col is removed. Reading
+        # directly as float32 therefore attempts to cast IDs such as
+        # ``cuTAR100`` to floats on some pandas versions. Parse the small chunk
+        # as text first, then convert only the count columns below.
+        "dtype": str,
+        "keep_default_na": False,
+        "na_filter": False,
     }
     if layout["header_style"] == "implicit_row_index":
         read_options.update(
@@ -202,7 +208,12 @@ def read_cutar_matrix(path: Path, chunk_rows: int = 64):
         )
     for chunk in pd.read_csv(path, **read_options):
         ids = chunk.index.astype(str).tolist()
-        values = chunk.to_numpy(dtype=np.float32, copy=False)
+        try:
+            values = chunk.to_numpy(dtype=np.float32)
+        except (TypeError, ValueError) as exc:
+            raise ValueError(
+                f"{path.name}: non-numeric value found in count columns"
+            ) from exc
         if not np.isfinite(values).all() or (values < 0).any():
             raise ValueError(f"{path.name}: counts must be finite and non-negative")
         if not np.allclose(values, np.rint(values), atol=1e-6):
