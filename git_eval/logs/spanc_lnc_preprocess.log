@@ -1,0 +1,15 @@
+2026-07-30 09:31:46,758 INFO starting SPanC-Lnc enhanced audit: /home/bio_yinshuwei/Spatial/data/Spanc-Lnc
+2026-07-30 09:31:50,192 INFO loaded 219442 unique cuTAR IDs from 00_cuTARs.bed
+2026-07-30 09:31:50,327 INFO barcode strategy=sequence16 overlap=6663
+2026-07-30 09:31:51,731 INFO audit AM1 status=PASS matched=6663 gene_fraction=0.992 cutar_fraction=0.907 bed_fraction=1.000
+2026-07-30 09:31:51,768 INFO barcode strategy=sequence16 overlap=2497
+2026-07-30 09:31:52,180 INFO audit AM2 status=PASS matched=2497 gene_fraction=0.996 cutar_fraction=0.961 bed_fraction=1.000
+2026-07-30 09:31:52,342 INFO barcode strategy=sequence16 overlap=13819
+2026-07-30 09:31:53,902 INFO audit AM3_pre status=PASS matched=13819 gene_fraction=0.994 cutar_fraction=0.933 bed_fraction=1.000
+2026-07-30 09:31:54,004 INFO barcode strategy=sequence16 overlap=12681
+2026-07-30 09:31:55,571 INFO audit AM3_post status=PASS matched=12681 gene_fraction=0.998 cutar_fraction=0.832 bed_fraction=1.000
+2026-07-30 09:31:55,654 INFO barcode strategy=sequence16 overlap=9801
+2026-07-30 09:31:56,407 INFO audit AM5 status=PASS matched=9801 gene_fraction=0.998 cutar_fraction=0.876 bed_fraction=1.000
+2026-07-30 09:31:56,496 INFO barcode strategy=sequence16 overlap=11096
+2026-07-30 09:31:57,156 INFO audit AM6 status=PASS matched=11096 gene_fraction=0.997 cutar_fraction=0.937 bed_fraction=1.000
+2026-07-30 09:31:57,168 INFO PASS_SPANCLNC_ENHANCED_AUDIT_READY_FOR_BUILD pair_pass=True matrix_pass=True pair_count=6 matrix_checks=17

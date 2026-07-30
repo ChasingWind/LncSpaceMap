@@ -1,7 +1,7 @@
-sample_id	path	status	error
-AM1	Acral_Mel1_cuTAR_mat.txt	FAIL	Acral_Mel1_cuTAR_mat.txt: cannot determine matrix orientation (row cuTAR fraction=0.000, column fraction=0.000)
-AM2	Acral_Mel2_cuTAR_mat.txt	FAIL	Acral_Mel2_cuTAR_mat.txt: cannot determine matrix orientation (row cuTAR fraction=0.000, column fraction=0.000)
-AM3_pre	Acral_Mel3_Pre_cuTAR_mat.txt	FAIL	Acral_Mel3_Pre_cuTAR_mat.txt: cannot determine matrix orientation (row cuTAR fraction=0.000, column fraction=0.000)
-AM3_post	Acral_Mel3_Post_cuTAR_mat.txt	FAIL	Acral_Mel3_Post_cuTAR_mat.txt: cannot determine matrix orientation (row cuTAR fraction=0.000, column fraction=0.000)
-AM5	Acral_Mel5_cuTAR_mat.txt	FAIL	Acral_Mel5_cuTAR_mat.txt: cannot determine matrix orientation (row cuTAR fraction=0.000, column fraction=0.000)
-AM6	Acral_Mel6_cuTAR_mat.txt	FAIL	Acral_Mel6_cuTAR_mat.txt: cannot determine matrix orientation (row cuTAR fraction=0.000, column fraction=0.000)
+sample_id	gene_file	cutar_file	status	orientation	header_style	n_cutars	n_cutar_cells	n_gene_cells	barcode_strategy	matched_cells	gene_match_fraction	cutar_match_fraction	duplicate_cutar_ids	bed_overlap	bed_overlap_fraction	row_cutar_fraction	column_barcode_fraction	error
+AM1	GSM6622292_AM1_filtered_feature_bc_matrix.h5	Acral_Mel1_cuTAR_mat.txt	PASS	features_by_cells	implicit_row_index	26777	7343	6720	sequence16	6663	0.9915178571428571	0.9073947977665804	0	26777	1.0	1.0	1.0	
+AM2	GSM6622293_AM2_filtered_feature_bc_matrix.h5	Acral_Mel2_cuTAR_mat.txt	PASS	features_by_cells	implicit_row_index	14314	2599	2506	sequence16	2497	0.9964086193136472	0.9607541362062332	0	14314	1.0	1.0	1.0	
+AM3_pre	GSM6622294_AM3_pre_filtered_feature_bc_matrix.h5	Acral_Mel3_Pre_cuTAR_mat.txt	PASS	features_by_cells	implicit_row_index	12678	14813	13896	sequence16	13819	0.9944588370754174	0.9328967798555323	0	12678	1.0	1.0	1.0	
+AM3_post	GSM6622295_AM3_post_filtered_feature_bc_matrix.h5	Acral_Mel3_Post_cuTAR_mat.txt	PASS	features_by_cells	implicit_row_index	14230	15235	12707	sequence16	12681	0.9979538836861572	0.8323596980636692	0	14230	1.0	1.0	1.0	
+AM5	GSM6622297_AM5_filtered_feature_bc_matrix.h5	Acral_Mel5_cuTAR_mat.txt	PASS	features_by_cells	implicit_row_index	8957	11192	9825	sequence16	9801	0.997557251908397	0.8757147962830594	0	8957	1.0	1.0	1.0	
+AM6	GSM6622298_AM6_filtered_feature_bc_matrix.h5	Acral_Mel6_cuTAR_mat.txt	PASS	features_by_cells	implicit_row_index	7714	11846	11130	sequence16	11096	0.9969451931716082	0.9366874894479149	0	7714	1.0	1.0	1.0	
