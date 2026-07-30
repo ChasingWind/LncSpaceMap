@@ -6,6 +6,7 @@ from scipy import sparse
 from lncspacemap.evaluation.minimal import evaluate_predictions
 from lncspacemap.io.spatial import validate_spatial_counts
 from lncspacemap.mapping.backends.spage import _bind_spage_axes
+from lncspacemap.mapping.backends.tangram import _project_target_matrix
 from lncspacemap.preprocessing.anchors import select_shared_anchors
 from lncspacemap.preprocessing.proxies import build_spatial_proxy_folds
 
@@ -122,3 +123,46 @@ def test_spage_axis_binding_rejects_shape_mismatch():
         assert "expected (2, 1)" in str(error)
     else:
         raise AssertionError("shape mismatch was not rejected")
+
+
+def test_tangram_target_only_projection_preserves_axes():
+    class Mapping:
+        pass
+
+    mapping = Mapping()
+    mapping.X = np.array([[0.75, 0.25], [0.25, 0.75]], dtype=np.float32)
+    mapping.obs_names = pd.Index(["cell-1", "cell-2"])
+    mapping.var_names = pd.Index(["spot-1", "spot-2"])
+    target_expression = sparse.csr_matrix([[2.0], [6.0]])
+    predicted = _project_target_matrix(
+        mapping,
+        target_expression,
+        mapping.obs_names,
+        mapping.var_names,
+        ["ENSG_TARGET"],
+    )
+    assert predicted.index.tolist() == ["spot-1", "spot-2"]
+    assert predicted.columns.tolist() == ["ENSG_TARGET"]
+    assert np.allclose(predicted["ENSG_TARGET"], [3.0, 5.0])
+
+
+def test_tangram_projection_rejects_spot_axis_mismatch():
+    class Mapping:
+        pass
+
+    mapping = Mapping()
+    mapping.X = np.ones((2, 2), dtype=np.float32)
+    mapping.obs_names = pd.Index(["cell-1", "cell-2"])
+    mapping.var_names = pd.Index(["spot-2", "spot-1"])
+    try:
+        _project_target_matrix(
+            mapping,
+            np.ones((2, 1), dtype=np.float32),
+            mapping.obs_names,
+            pd.Index(["spot-1", "spot-2"]),
+            ["ENSG_TARGET"],
+        )
+    except ValueError as error:
+        assert "spot axis" in str(error)
+    else:
+        raise AssertionError("spot axis mismatch was not rejected")
