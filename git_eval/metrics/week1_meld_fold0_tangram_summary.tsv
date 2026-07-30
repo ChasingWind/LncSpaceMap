@@ -1,2 +1,2 @@
-targets	evaluable_spearman	median_spearman	median_z_nrmse	backend	fold
-25	25	0.06662681833218047	1.3769328808855852	tangram	0
+targets	permutations	evaluable_spearman	median_spearman	significant_spearman_p05	evaluable_pearson	median_pearson	significant_pearson_p05	evaluable_z_nrmse	median_z_nrmse	significant_z_nrmse_p05	evaluable_detection_auroc	median_detection_auroc	significant_detection_auroc_p05	evaluable_detection_auprc	median_detection_auprc	significant_detection_auprc_p05	evaluable_topk_recall	median_topk_recall	significant_topk_recall_p05	backend	fold
+25	200	25	0.06759372882139293	11	25	0.029737004103126494	6	25	1.3930276349713049	6	25	0.6906862745098039	11	25	0.031196882537891588	5	25	0.0	4	tangram	0

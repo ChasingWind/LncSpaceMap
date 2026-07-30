@@ -1,0 +1,36 @@
+{
+  "backends": [
+    "spage",
+    "tangram"
+  ],
+  "decision": "ADMIT_TARGET_SPECIFIC_DEVELOPMENT",
+  "folds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "leakage_checks": "PASS",
+  "per_metric_winner": {
+    "detection_auprc": "tangram",
+    "detection_auroc": "tangram",
+    "pearson": "tangram",
+    "spearman": "tangram",
+    "topk_recall": "tie",
+    "z_nrmse": "tangram"
+  },
+  "provisional_winner": "tangram",
+  "schema_version": "0.1",
+  "spot_order_checks": "PASS",
+  "stage": "week1_meld_multifold_evaluation",
+  "status": "PASS",
+  "target_panel_match": "PASS",
+  "targets_per_backend": {
+    "spage": 125,
+    "tangram": 125
+  },
+  "winner_metric_counts": {
+    "tangram": 5
+  }
+}

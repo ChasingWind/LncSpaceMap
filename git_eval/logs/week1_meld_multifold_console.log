@@ -1,0 +1,86 @@
+2026-07-30 22:36:30,284 INFO START_MULTIFOLD backend=spage fold=0
+2026-07-30 22:36:39,233 WARNING reference-only fold 0 had insufficient spatial truth; using deterministic MelD proxy panel with 25 targets
+2026-07-30 22:37:08,307 INFO PASS_WEEK1_BASELINE backend=spage fold=0 spots=617 anchors=2000 targets=25 target_source=meld_spatial_evaluable_fallback
+2026-07-30 22:37:09,867 INFO START_MULTIFOLD backend=spage fold=1
+2026-07-30 22:37:18,500 WARNING reference-only fold 1 had insufficient spatial truth; using deterministic MelD proxy panel with 25 targets
+2026-07-30 22:37:46,630 INFO PASS_WEEK1_BASELINE backend=spage fold=1 spots=617 anchors=2000 targets=25 target_source=meld_spatial_evaluable_fallback
+2026-07-30 22:37:46,756 INFO START_MULTIFOLD backend=spage fold=2
+2026-07-30 22:37:55,225 WARNING reference-only fold 2 had insufficient spatial truth; using deterministic MelD proxy panel with 25 targets
+2026-07-30 22:38:23,564 INFO PASS_WEEK1_BASELINE backend=spage fold=2 spots=617 anchors=2000 targets=25 target_source=meld_spatial_evaluable_fallback
+2026-07-30 22:38:23,691 INFO START_MULTIFOLD backend=spage fold=3
+2026-07-30 22:38:29,605 WARNING reference-only fold 3 had insufficient spatial truth; using deterministic MelD proxy panel with 25 targets
+2026-07-30 22:38:57,667 INFO PASS_WEEK1_BASELINE backend=spage fold=3 spots=617 anchors=2000 targets=25 target_source=meld_spatial_evaluable_fallback
+2026-07-30 22:38:57,798 INFO START_MULTIFOLD backend=spage fold=4
+2026-07-30 22:39:03,710 WARNING reference-only fold 4 had insufficient spatial truth; using deterministic MelD proxy panel with 25 targets
+2026-07-30 22:39:31,976 INFO PASS_WEEK1_BASELINE backend=spage fold=4 spots=617 anchors=2000 targets=25 target_source=meld_spatial_evaluable_fallback
+2026-07-30 22:39:32,094 INFO START_MULTIFOLD backend=tangram fold=0
+2026-07-30 22:39:37,922 WARNING reference-only fold 0 had insufficient spatial truth; using deterministic MelD proxy panel with 25 targets
+2026-07-30 22:39:54,206 INFO 2000 training genes are saved in `uns``training_genes` of both single cell and spatial Anndatas.
+2026-07-30 22:39:54,207 INFO 2000 overlapped genes are saved in `uns``overlap_genes` of both single cell and spatial Anndatas.
+2026-07-30 22:39:54,207 INFO uniform based density prior is calculated and saved in `obs``uniform_density` of the spatial Anndata.
+2026-07-30 22:39:54,208 INFO rna count based density prior is calculated and saved in `obs``rna_count_based_density` of the spatial Anndata.
+2026-07-30 22:39:54,208 INFO Allocate tensors for mapping.
+2026-07-30 22:39:54,803 INFO Begin training with 2000 genes and rna_count_based density_prior in cells mode...
+2026-07-30 22:39:57,398 INFO Printing scores every 100 epochs.
+2026-07-30 22:40:02,039 INFO Saving results..
+2026-07-30 22:40:14,723 INFO PASS_WEEK1_BASELINE backend=tangram fold=0 spots=617 anchors=2000 targets=25 target_source=meld_spatial_evaluable_fallback
+2026-07-30 22:40:14,888 INFO START_MULTIFOLD backend=tangram fold=1
+2026-07-30 22:40:20,680 WARNING reference-only fold 1 had insufficient spatial truth; using deterministic MelD proxy panel with 25 targets
+2026-07-30 22:40:36,088 INFO 2000 training genes are saved in `uns``training_genes` of both single cell and spatial Anndatas.
+2026-07-30 22:40:36,088 INFO 2000 overlapped genes are saved in `uns``overlap_genes` of both single cell and spatial Anndatas.
+2026-07-30 22:40:36,089 INFO uniform based density prior is calculated and saved in `obs``uniform_density` of the spatial Anndata.
+2026-07-30 22:40:36,089 INFO rna count based density prior is calculated and saved in `obs``rna_count_based_density` of the spatial Anndata.
+2026-07-30 22:40:36,090 INFO Allocate tensors for mapping.
+2026-07-30 22:40:36,677 INFO Begin training with 2000 genes and rna_count_based density_prior in cells mode...
+2026-07-30 22:40:37,923 INFO Printing scores every 100 epochs.
+2026-07-30 22:40:42,335 INFO Saving results..
+2026-07-30 22:40:55,216 INFO PASS_WEEK1_BASELINE backend=tangram fold=1 spots=617 anchors=2000 targets=25 target_source=meld_spatial_evaluable_fallback
+2026-07-30 22:40:55,424 INFO START_MULTIFOLD backend=tangram fold=2
+2026-07-30 22:41:01,218 WARNING reference-only fold 2 had insufficient spatial truth; using deterministic MelD proxy panel with 25 targets
+2026-07-30 22:41:16,595 INFO 2000 training genes are saved in `uns``training_genes` of both single cell and spatial Anndatas.
+2026-07-30 22:41:16,596 INFO 2000 overlapped genes are saved in `uns``overlap_genes` of both single cell and spatial Anndatas.
+2026-07-30 22:41:16,596 INFO uniform based density prior is calculated and saved in `obs``uniform_density` of the spatial Anndata.
+2026-07-30 22:41:16,596 INFO rna count based density prior is calculated and saved in `obs``rna_count_based_density` of the spatial Anndata.
+2026-07-30 22:41:16,596 INFO Allocate tensors for mapping.
+2026-07-30 22:41:17,188 INFO Begin training with 2000 genes and rna_count_based density_prior in cells mode...
+2026-07-30 22:41:18,434 INFO Printing scores every 100 epochs.
+2026-07-30 22:41:22,849 INFO Saving results..
+2026-07-30 22:41:35,727 INFO PASS_WEEK1_BASELINE backend=tangram fold=2 spots=617 anchors=2000 targets=25 target_source=meld_spatial_evaluable_fallback
+2026-07-30 22:41:35,935 INFO START_MULTIFOLD backend=tangram fold=3
+2026-07-30 22:41:41,831 WARNING reference-only fold 3 had insufficient spatial truth; using deterministic MelD proxy panel with 25 targets
+2026-07-30 22:41:57,284 INFO 2000 training genes are saved in `uns``training_genes` of both single cell and spatial Anndatas.
+2026-07-30 22:41:57,285 INFO 2000 overlapped genes are saved in `uns``overlap_genes` of both single cell and spatial Anndatas.
+2026-07-30 22:41:57,285 INFO uniform based density prior is calculated and saved in `obs``uniform_density` of the spatial Anndata.
+2026-07-30 22:41:57,286 INFO rna count based density prior is calculated and saved in `obs``rna_count_based_density` of the spatial Anndata.
+2026-07-30 22:41:57,286 INFO Allocate tensors for mapping.
+2026-07-30 22:41:57,881 INFO Begin training with 2000 genes and rna_count_based density_prior in cells mode...
+2026-07-30 22:41:59,110 INFO Printing scores every 100 epochs.
+2026-07-30 22:42:03,534 INFO Saving results..
+2026-07-30 22:42:16,422 INFO PASS_WEEK1_BASELINE backend=tangram fold=3 spots=617 anchors=2000 targets=25 target_source=meld_spatial_evaluable_fallback
+2026-07-30 22:42:16,629 INFO START_MULTIFOLD backend=tangram fold=4
+2026-07-30 22:42:22,533 WARNING reference-only fold 4 had insufficient spatial truth; using deterministic MelD proxy panel with 25 targets
+2026-07-30 22:42:37,899 INFO 2000 training genes are saved in `uns``training_genes` of both single cell and spatial Anndatas.
+2026-07-30 22:42:37,900 INFO 2000 overlapped genes are saved in `uns``overlap_genes` of both single cell and spatial Anndatas.
+2026-07-30 22:42:37,900 INFO uniform based density prior is calculated and saved in `obs``uniform_density` of the spatial Anndata.
+2026-07-30 22:42:37,901 INFO rna count based density prior is calculated and saved in `obs``rna_count_based_density` of the spatial Anndata.
+2026-07-30 22:42:37,901 INFO Allocate tensors for mapping.
+2026-07-30 22:42:38,484 INFO Begin training with 2000 genes and rna_count_based density_prior in cells mode...
+2026-07-30 22:42:39,714 INFO Printing scores every 100 epochs.
+2026-07-30 22:42:44,136 INFO Saving results..
+2026-07-30 22:42:56,980 INFO PASS_WEEK1_BASELINE backend=tangram fold=4 spots=617 anchors=2000 targets=25 target_source=meld_spatial_evaluable_fallback
+2026-07-30 22:42:57,260 INFO PASS_WEEK1_MULTIFOLD provisional_winner=tangram decision=ADMIT_TARGET_SPECIFIC_DEVELOPMENT
+Score: 0.190, KL reg: 0.284
+Score: 0.305, KL reg: 0.001
+Score: 0.190, KL reg: 0.284
+Score: 0.305, KL reg: 0.001
+Score: 0.189, KL reg: 0.284
+Score: 0.305, KL reg: 0.001
+Score: 0.189, KL reg: 0.285
+Score: 0.305, KL reg: 0.001
+Score: 0.190, KL reg: 0.284
+Score: 0.305, KL reg: 0.001
+
+real	6m29.425s
+user	6m29.279s
+sys	0m36.593s
+multifold_exit_code=0
