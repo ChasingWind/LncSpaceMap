@@ -23,3 +23,7 @@ spage:
 tangram:
   device: cuda:0
   num_epochs: 200
+
+evaluation:
+  permutations: 200
+  alpha: 0.05
