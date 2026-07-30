@@ -64,6 +64,7 @@ and complete result directories must not be committed. See `.gitignore` and
 - [`docs/SPANCLNC_PREPROCESSING.md`](docs/SPANCLNC_PREPROCESSING.md)
 - [`docs/WEEK1_EXECUTION.md`](docs/WEEK1_EXECUTION.md)
 - [`docs/WEEK1_BASELINE.md`](docs/WEEK1_BASELINE.md)
+- [`docs/LOCAL_RESULT_EXPORT.md`](docs/LOCAL_RESULT_EXPORT.md)
 
 ## Resolution statement
 
