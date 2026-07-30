@@ -191,7 +191,12 @@ def run_fold(
         raise ValueError(f"unsupported backend: {backend}")
 
     predicted = predicted.loc[spatial.obs_names, targets]
-    per_gene, summary = evaluate_predictions(predicted, truth)
+    per_gene, summary = evaluate_predictions(
+        predicted,
+        truth,
+        n_permutations=int(config["evaluation"]["permutations"]),
+        seed=int(config["project"]["seed"]) + int(fold),
+    )
     per_gene.insert(0, "backend", backend)
     per_gene.insert(1, "fold", fold)
     metrics_path = review_dir / f"metrics/week1_meld_fold{fold}_{backend}.tsv"
@@ -226,6 +231,7 @@ def run_fold(
         "targets_requested": len(requested),
         "targets_evaluated": len(targets),
         "target_source": target_source,
+        "permutations": int(config["evaluation"]["permutations"]),
         "leakage_check": "PASS",
         "spot_order_check": "PASS",
         "packages": _versions(),
