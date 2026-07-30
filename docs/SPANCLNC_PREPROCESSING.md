@@ -75,3 +75,48 @@ Large outputs remain outside git:
 
 Only the lightweight audit tables and logs under `git_eval` should be
 committed for review.
+
+## Stage 3: finalize and reference QC
+
+Use this mode after the six sample H5AD files have already been built. It does
+not reread the large raw cuTAR text matrices.
+
+```bash
+python scripts/process_spanc_lnc.py finalize \
+  --data-dir ~/Spatial/data/Spanc-Lnc \
+  --output-dir ~/Spatial/data/Spanc-Lnc/processed/reference
+```
+
+Finalize performs the following:
+
+1. reconstructs `feature_type` and available gene metadata in the combined
+   H5AD;
+2. attaches cuTAR chromosome, start, end, and strand from `00_cuTARs.bed`;
+3. records one `quantified_<sample>` mask per sample plus
+   `quantified_sample_count`, preventing structural absence from being treated
+   as a biological zero;
+4. calculates cell-level gene/cuTAR counts and detection rates;
+5. calculates feature-level counts, prevalence, and sample support;
+6. assigns provisional `all_detected`, `extended`, and `core` cuTAR tiers;
+7. atomically replaces the earlier combined H5AD only after validation and
+   writes `PASS_SPANCLNC_REFERENCE_QC_READY_FOR_ANNOTATION` to the log.
+
+Detailed QC remains outside git:
+
+```text
+processed/reference/qc/
+├── spanc_lnc_cell_qc.tsv.gz
+└── spanc_lnc_feature_qc.tsv.gz
+```
+
+Lightweight review outputs are written to:
+
+- `git_eval/metrics/spanc_lnc_combined_contract.tsv`
+- `git_eval/metrics/spanc_lnc_reference_cell_qc_summary.tsv`
+- `git_eval/metrics/spanc_lnc_cutar_tier_summary.tsv`
+
+The tier rules are deliberately provisional. `extended` requires detection in
+at least 10 cells and quantification in at least two samples; `core` requires
+detection in at least 30 cells and quantification in at least three samples.
+Both require at least 0.1% prevalence among cells in which the feature was
+quantified. No feature is removed at this stage.
