@@ -344,7 +344,9 @@ def audit_cutar_pair(
 ) -> dict:
     gene_path = data_dir / pair.gene_file
     cutar_path = data_dir / pair.cutar_file
-    info = inspect_text_matrix(cutar_path)
+    # The full feature axis is scanned below for BED overlap and duplicates, so
+    # avoid a second multi-gigabyte line-count pass during audit.
+    info = inspect_text_matrix(cutar_path, count_rows=False)
     if info.orientation != "features_by_cells":
         raise ValueError(
             f"{pair.sample_id}: expected features_by_cells, got {info.orientation}"
