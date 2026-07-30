@@ -1,8 +1,13 @@
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
-from lncspacemap.io.spanc_lnc import inspect_text_matrix, match_barcodes
+from lncspacemap.io.spanc_lnc import (
+    inspect_text_matrix,
+    match_barcodes,
+    read_cutar_matrix,
+)
 
 
 def test_detect_features_by_cells(tmp_path: Path):
@@ -35,6 +40,24 @@ def test_detect_implicit_row_index_header(tmp_path: Path):
     assert info.first_ids == ["cuTAR1", "cuTAR2"]
     assert info.row_cutar_fraction == 1.0
     assert info.column_barcode_fraction == 1.0
+
+
+def test_read_implicit_row_index_count_matrix(tmp_path: Path):
+    path = tmp_path / "uq_cutar.tsv"
+    path.write_text(
+        "AAAAAAAAAAAAAAAA.1\tCCCCCCCCCCCCCCCC.1\n"
+        "cuTAR1\t1\t0\n"
+        "cuTAR2\t0\t2\n"
+    )
+    obj = read_cutar_matrix(path, chunk_rows=1)
+    assert obj.shape == (2, 2)
+    assert obj.obs_names.tolist() == [
+        "AAAAAAAAAAAAAAAA.1",
+        "CCCCCCCCCCCCCCCC.1",
+    ]
+    assert obj.var_names.tolist() == ["cuTAR1", "cuTAR2"]
+    np.testing.assert_array_equal(obj.X.toarray(), [[1, 0], [0, 2]])
+    np.testing.assert_array_equal(obj.layers["counts"].toarray(), [[1, 0], [0, 2]])
 
 
 def test_barcode_suffix_matching():
