@@ -12,6 +12,11 @@ targets:
   min_detected_spots: 3
   min_evaluable_targets: 5
 
+spatial_proxy_fallback:
+  folds: 5
+  genes_per_fold: 25
+  max_detected_fraction: 0.25
+
 spage:
   n_pv: 30
 
