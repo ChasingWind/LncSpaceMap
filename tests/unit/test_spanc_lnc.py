@@ -1,9 +1,13 @@
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import pandas as pd
 
 from lncspacemap.io.spanc_lnc import (
+    _assign_cutar_tiers,
+    _feature_catalog,
+    SamplePair,
     inspect_text_matrix,
     match_barcodes,
     read_cutar_matrix,
@@ -78,3 +82,52 @@ def test_barcode_dot_suffix_matches_10x_dash_suffix():
     assert strategy == "sequence16"
     assert left == [0, 1]
     assert right == [0, 1]
+
+
+def test_cutar_tiers_require_cross_sample_support():
+    tiers = _assign_cutar_tiers(
+        detected_cells=np.array([0, 9, 10, 30]),
+        quantified_cells=np.array([1000, 1000, 1000, 1000]),
+        quantified_samples=np.array([6, 2, 2, 3]),
+    )
+    assert tiers.tolist() == ["excluded", "all_detected", "extended", "core"]
+
+
+def test_feature_catalog_preserves_type_coordinates_and_quantification(tmp_path: Path):
+    bed = tmp_path / "cutars.bed"
+    bed.write_text(
+        "chr1\t10\t20\tcuTAR1\t.\t+\n"
+        "chr2\t30\t40\tcuTAR2\t.\t-\n"
+    )
+    first = SimpleNamespace(
+        var_names=pd.Index(["ENSG1", "cuTAR1"]),
+        var=pd.DataFrame(
+            {
+                "feature_type": ["gene", "cuTAR"],
+                "gene_symbol": ["GENE1", np.nan],
+            },
+            index=["ENSG1", "cuTAR1"],
+        ),
+    )
+    second = SimpleNamespace(
+        var_names=pd.Index(["ENSG1", "cuTAR2"]),
+        var=pd.DataFrame(
+            {
+                "feature_type": ["gene", "cuTAR"],
+                "gene_symbol": ["GENE1", np.nan],
+            },
+            index=["ENSG1", "cuTAR2"],
+        ),
+    )
+    pairs = [
+        SamplePair("S1", "g1.h5", "u1.tsv", "acral", "untreated"),
+        SamplePair("S2", "g2.h5", "u2.tsv", "acral", "untreated"),
+    ]
+    catalog = _feature_catalog([first, second], pairs, bed)
+    assert catalog.loc["ENSG1", "feature_type"] == "gene"
+    assert catalog.loc["ENSG1", "quantified_sample_count"] == 2
+    assert catalog.loc["cuTAR1", "quantified_sample_count"] == 1
+    assert bool(catalog.loc["cuTAR1", "quantified_S1"])
+    assert not bool(catalog.loc["cuTAR1", "quantified_S2"])
+    assert catalog.loc["cuTAR1", "chrom"] == "chr1"
+    assert catalog.loc["cuTAR2", "strand"] == "-"
