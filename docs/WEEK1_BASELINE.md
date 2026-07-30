@@ -38,6 +38,8 @@ directory. `git_eval` receives the spatial contract, anchor/target manifests,
 per-target metrics, summaries, package versions, and logs.
 
 SpaGE uses its official normalized cell-by-gene DataFrame API. Tangram maps
-reference cells to spots using anchors only and projects the withheld genes
-after fitting. A 24 GB RTX 3090 is sufficient for the 56,557-cell by 623-spot
-MelD mapping; A6000 is optional rather than required.
+reference cells to spots using anchors only. Withheld targets are projected
+using Tangram's mapping equation (`cell-by-spot.T @ cell-by-target`) under
+explicit cell, spot, and target axis checks; this avoids version-specific
+identifier mutation in `project_genes`. A 24 GB RTX 3090 is sufficient for the
+56,557-cell by 617-spot MelD mapping; A6000 is optional rather than required.
