@@ -11,8 +11,11 @@ abstain when the reference evidence is insufficient.
 
 ## Project status
 
-Planning and repository-architecture phase. No implementation code has been
-added yet.
+SPanC-Lnc reference preparation is complete. The finalized development
+reference contains 56,557 matched cells, 33,538 genes, and 43,382 cuTAR
+targets with explicit sample-quantification masks and genomic coordinates.
+Week 1 contract, GENCODE annotation, target-eligibility, and leakage-free
+masked-gene split implementation is active.
 
 ## Planned workflow
 
@@ -58,6 +61,7 @@ and complete result directories must not be committed. See `.gitignore` and
 - [`docs/COMPUTE_PROFILE.md`](docs/COMPUTE_PROFILE.md)
 - [`docs/SPANCLNC_DATA_ASSESSMENT.md`](docs/SPANCLNC_DATA_ASSESSMENT.md)
 - [`docs/SPANCLNC_PREPROCESSING.md`](docs/SPANCLNC_PREPROCESSING.md)
+- [`docs/WEEK1_EXECUTION.md`](docs/WEEK1_EXECUTION.md)
 
 ## Resolution statement
 
