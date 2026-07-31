@@ -8,9 +8,14 @@ spatial cuTAR counts as model input.
 - finalized acral-melanoma gene-plus-cuTAR single-cell reference;
 - finalized reference feature-QC table;
 - aligned MelD gene spatial H5AD from Week 1;
-- author-provided `MelD.txt` cuTAR count matrix;
+- author-provided `cuTAR_counts/MelD_cuTAR_mat.txt` count matrix;
 - `00_cuTARs.bed`;
 - `configs/week2_cutar.yaml`.
+
+`Visium_spaceranger_outputs/Melanoma/MelD/outs/MelD.txt` or a locally
+renamed `MelD/MelD.txt` file is not accepted as the cuTAR matrix. The released
+matrix is verified against SHA1
+`e8f581e9462c89daee9fe9da528885ed59768228` before parsing.
 
 The text matrix is parsed incrementally. Orientation, delimiter, header style,
 raw integer counts, duplicate identifiers, and barcode normalization are
