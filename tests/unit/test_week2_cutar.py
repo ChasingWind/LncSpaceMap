@@ -2,7 +2,13 @@ import numpy as np
 import pandas as pd
 from scipy import sparse
 
-from lncspacemap.pipeline.week2_cutar import build_target_catalog
+from lncspacemap.pipeline.week2_cutar import _sha1, build_target_catalog
+
+
+def test_sha1_source_contract(tmp_path):
+    path = tmp_path / "matrix.txt"
+    path.write_bytes(b"released-matrix\n")
+    assert _sha1(path) == "a34764384d224c765f3886570e89c578dc402af0"
 
 
 def test_build_target_catalog_freezes_only_four_way_supported_targets():
