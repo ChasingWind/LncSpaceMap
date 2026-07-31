@@ -23,7 +23,37 @@ spage:
 tangram:
   device: cuda:0
   num_epochs: 200
+  density_prior: rna_count_based
+  learning_rate: 0.1
 
 evaluation:
   permutations: 200
   alpha: 0.05
+
+tuning:
+  selection_fold: 0
+  confirmation_folds: [1, 2, 3, 4]
+  candidates:
+    anchors_1000:
+      anchors: 1000
+      num_epochs: 300
+      density_prior: rna_count_based
+    anchors_4000:
+      anchors: 4000
+      num_epochs: 300
+      density_prior: rna_count_based
+    uniform_2000:
+      anchors: 2000
+      num_epochs: 300
+      density_prior: uniform
+  material_delta:
+    spearman: 0.01
+    pearson: 0.01
+    z_nrmse: 0.01
+    detection_auroc: 0.02
+    detection_auprc: 0.002
+    topk_recall: 0.02
+  selection_min_directional_wins: 4
+  selection_min_material_wins: 2
+  confirmation_min_directional_wins: 4
+  confirmation_min_material_wins: 2
