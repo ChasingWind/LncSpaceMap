@@ -1,0 +1,7 @@
+candidate	metric	direction	baseline_median	candidate_median	candidate_advantage	material_threshold	directional_win	material_win	material_regression	normalized_gain
+anchors_1000	spearman	higher	0.063233608920571	0.06955840092851956	0.006324792007948554	0.01	True	False	False	0.6324792007948554
+anchors_1000	pearson	higher	0.028088296959119602	0.035080977261814	0.0069926803026943984	0.01	True	False	False	0.6992680302694398
+anchors_1000	z_nrmse	lower	1.3942106054153809	1.3891861018259841	0.005024503589396767	0.01	True	False	False	0.5024503589396767
+anchors_1000	detection_auroc	higher	0.6683646313231415	0.6862286328531203	0.0178640015299788	0.02	True	False	False	0.8932000764989401
+anchors_1000	detection_auprc	higher	0.02733668060532375	0.030039959562973402	0.0027032789576496505	0.002	True	True	False	1.3516394788248252
+anchors_1000	topk_recall	higher	0.0	0.0	0.0	0.02	False	False	False	0.0

@@ -1,0 +1,72 @@
+{
+  "confirmation": {
+    "candidate": "anchors_1000",
+    "core_nonregression": true,
+    "directional_wins": 5,
+    "eligible": false,
+    "folds": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "material_regressions": 0,
+    "material_wins": 1,
+    "normalized_gain_sum": 4.079037145327737,
+    "targets": 100
+  },
+  "confirmation_folds": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "decision": "STOP_TUNING_ENTER_W2",
+  "reason": "candidate did not reproduce material gains on untouched folds",
+  "round1_candidates": [
+    {
+      "candidate": "anchors_1000",
+      "core_nonregression": true,
+      "directional_wins": 4,
+      "eligible": true,
+      "folds": [
+        0
+      ],
+      "material_regressions": 0,
+      "material_wins": 3,
+      "normalized_gain_sum": 4.512209061074291,
+      "targets": 25
+    },
+    {
+      "candidate": "anchors_4000",
+      "core_nonregression": false,
+      "directional_wins": 3,
+      "eligible": false,
+      "folds": [
+        0
+      ],
+      "material_regressions": 1,
+      "material_wins": 1,
+      "normalized_gain_sum": 0.6863424231854955,
+      "targets": 25
+    },
+    {
+      "candidate": "uniform_2000",
+      "core_nonregression": false,
+      "directional_wins": 0,
+      "eligible": false,
+      "folds": [
+        0
+      ],
+      "material_regressions": 5,
+      "material_wins": 0,
+      "normalized_gain_sum": -8.00747447375334,
+      "targets": 25
+    }
+  ],
+  "schema_version": "0.1",
+  "selected_candidate": "anchors_1000",
+  "selection_fold": 0,
+  "stage": "week1_tangram_bounded_tuning",
+  "status": "PASS"
+}

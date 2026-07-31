@@ -1,0 +1,4 @@
+candidate	targets	folds	directional_wins	material_wins	material_regressions	core_nonregression	normalized_gain_sum	eligible
+anchors_1000	25	[0]	4	3	0	True	4.512209061074291	True
+anchors_4000	25	[0]	3	1	1	False	0.6863424231854955	False
+uniform_2000	25	[0]	0	0	5	False	-8.00747447375334	False

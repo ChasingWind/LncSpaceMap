@@ -1,0 +1,53 @@
+{
+  "anchors": 1000,
+  "backend": "tangram",
+  "backend_parameters": {
+    "density_prior": "rna_count_based",
+    "device": "cuda:0",
+    "learning_rate": 0.1,
+    "num_epochs": 300
+  },
+  "fold": 0,
+  "leakage_check": "PASS",
+  "packages": {
+    "SpaGE": "not-installed-or-unversioned",
+    "anndata": "0.12.10",
+    "numpy": "2.4.3",
+    "scanpy": "1.11.5",
+    "scipy": "1.17.1",
+    "tangram-sc": "1.0.4"
+  },
+  "permutations": 200,
+  "platform": "Linux-4.18.0-305.3.1.el8_4.x86_64-x86_64-with-glibc2.27",
+  "python": "3.11.13",
+  "schema_version": "0.1",
+  "spot_order_check": "PASS",
+  "spots": 617,
+  "stage": "week1_meld_masked_baseline",
+  "status": "PASS",
+  "summary": {
+    "evaluable_detection_auprc": 25,
+    "evaluable_detection_auroc": 25,
+    "evaluable_pearson": 25,
+    "evaluable_spearman": 25,
+    "evaluable_topk_recall": 25,
+    "evaluable_z_nrmse": 25,
+    "median_detection_auprc": 0.04066821157027682,
+    "median_detection_auroc": 0.6845238095238095,
+    "median_pearson": 0.043638056276290714,
+    "median_spearman": 0.07188097768317071,
+    "median_topk_recall": 0.0,
+    "median_z_nrmse": 1.3830126129025067,
+    "permutations": 200,
+    "significant_detection_auprc_p05": 6,
+    "significant_detection_auroc_p05": 14,
+    "significant_pearson_p05": 6,
+    "significant_spearman_p05": 14,
+    "significant_topk_recall_p05": 4,
+    "significant_z_nrmse_p05": 6,
+    "targets": 25
+  },
+  "target_source": "meld_spatial_evaluable_fallback",
+  "targets_evaluated": 25,
+  "targets_requested": 25
+}
