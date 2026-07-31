@@ -1,4 +1,4 @@
-schema_version: "0.1"
+schema_version: "0.2"
 
 annotation:
   species: human
@@ -24,3 +24,17 @@ eligibility:
   min_reference_detected_fraction: 0.002
   min_reference_samples: 2
   min_spatial_detected_spots: 3
+
+mapping:
+  backend: tangram
+  device: cuda:0
+  random_state: 0
+  n_anchors: 2000
+  min_reference_fraction: 0.002
+  min_spatial_spots: 5
+  num_epochs: 200
+  density_prior: rna_count_based
+  learning_rate: 0.1
+  target_batch_size: 64
+  min_reference_support_fraction: 0.05
+  min_finite_prediction_fraction: 0.95
