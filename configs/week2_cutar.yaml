@@ -4,6 +4,10 @@ annotation:
   species: human
   genome_build: GRCh38
 
+source:
+  expected_filename: MelD_cuTAR_mat.txt
+  sha1: e8f581e9462c89daee9fe9da528885ed59768228
+
 io:
   chunk_rows: 64
 
