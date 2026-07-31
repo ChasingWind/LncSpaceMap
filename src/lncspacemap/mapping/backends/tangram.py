@@ -83,6 +83,8 @@ def run_tangram(
     *,
     device: str = "cuda:0",
     num_epochs: int = 200,
+    density_prior: str = "rna_count_based",
+    learning_rate: float = 0.1,
     random_state: int = 0,
 ):
     """Map cells to spots on anchors, then project withheld target genes."""
@@ -122,7 +124,8 @@ def run_tangram(
         ad_sc,
         ad_sp,
         mode="cells",
-        density_prior="rna_count_based",
+        density_prior=density_prior,
+        learning_rate=float(learning_rate),
         num_epochs=int(num_epochs),
         device=device,
         random_state=int(random_state),
