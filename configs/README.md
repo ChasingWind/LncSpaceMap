@@ -6,3 +6,6 @@ dataset role. Paths remain local and must never point to committed raw data.
 
 Every run must archive the resolved configuration outside git and copy a
 redacted version or configuration hash into `git_eval/manifests`.
+
+`week2_cutar.yaml` freezes the MelD observed-cuTAR input contract, exact-ID
+overlap gates, and reference/spatial target-evidence thresholds for W2-A.
