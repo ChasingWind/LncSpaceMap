@@ -16,7 +16,8 @@ reference contains 56,557 matched cells, 33,538 genes, and 43,382 cuTAR
 targets with explicit sample-quantification masks and genomic coordinates.
 Week 1 contract, GENCODE annotation, target-eligibility, and leakage-free
 masked-gene split implementation is complete. The MelD masked-gene SpaGE and
-Tangram baseline stage is available in `scripts/run_week1_baseline.py`.
+Tangram baseline and bounded tuning stages are complete. Week 2A observed
+MelD-cuTAR admission is available in `scripts/run_week2_cutar.py`.
 
 ## Planned workflow
 
@@ -67,6 +68,7 @@ and complete result directories must not be committed. See `.gitignore` and
 - [`docs/LOCAL_RESULT_EXPORT.md`](docs/LOCAL_RESULT_EXPORT.md)
 - [`docs/WEEK1_MULTIFOLD.md`](docs/WEEK1_MULTIFOLD.md)
 - [`docs/WEEK1_TUNING.md`](docs/WEEK1_TUNING.md)
+- [`docs/WEEK2_CUTAR_CONTRACT.md`](docs/WEEK2_CUTAR_CONTRACT.md)
 
 ## Resolution statement
 
