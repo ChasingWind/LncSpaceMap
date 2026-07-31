@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
 from pathlib import Path
@@ -19,6 +20,14 @@ from lncspacemap.io.spanc_lnc import (
 )
 
 LOG = logging.getLogger("lncspacemap.week2_cutar")
+
+
+def _sha1(path: Path) -> str:
+    digest = hashlib.sha1()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def _matrix_feature_stats(matrix) -> tuple[np.ndarray, np.ndarray]:
@@ -198,6 +207,15 @@ def audit_meld_cutar(
     config = yaml.safe_load(config_path.read_text())
     contract_cfg = config["contract"]
     eligibility = config["eligibility"]
+    source_cfg = config["source"]
+    source_sha1 = _sha1(spatial_cutar_path)
+    if source_sha1 != str(source_cfg["sha1"]):
+        raise ValueError(
+            f"{spatial_cutar_path.name}: SHA1 {source_sha1} does not match the "
+            f"released {source_cfg['expected_filename']} matrix "
+            f"({source_cfg['sha1']}). MelD/MelD.txt is not the cuTAR count "
+            "matrix; download data/cuTAR_counts/MelD_cuTAR_mat.txt."
+        )
 
     layout = inspect_text_matrix(spatial_cutar_path)
     chunk_rows = int(config["io"]["chunk_rows"])
@@ -399,6 +417,8 @@ def audit_meld_cutar(
         "checks": {key: "PASS" if value else "FAIL" for key, value in checks.items()},
         "matrix": {
             "path": str(spatial_cutar_path),
+            "source_filename": str(source_cfg["expected_filename"]),
+            "source_sha1": source_sha1,
             "orientation": layout.orientation,
             "header_style": layout.header_style,
             "chunk_rows": chunk_rows,
