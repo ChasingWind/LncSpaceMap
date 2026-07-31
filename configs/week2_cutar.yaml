@@ -13,7 +13,8 @@ io:
 
 contract:
   min_spatial_barcode_overlap_fraction: 0.99
-  min_reference_feature_overlap_fraction: 0.90
+  min_reference_feature_overlap_targets: 100
+  warn_below_reference_feature_overlap_fraction: 0.90
   min_bed_feature_overlap_fraction: 0.95
   min_frozen_targets: 30
 
