@@ -181,6 +181,28 @@ def _overlap_summary(
     return pd.DataFrame(rows, columns=["category", "targets"])
 
 
+def _admission_checks(
+    *,
+    barcode_fraction: float,
+    spatial_reference_overlap_count: int,
+    spatial_bed_fraction: float,
+    coordinate_valid: bool,
+    frozen_count: int,
+    contract_cfg: dict,
+) -> dict[str, bool]:
+    """Evaluate hard gates without treating biological coverage as identity QC."""
+    return {
+        "barcode_overlap": barcode_fraction
+        >= float(contract_cfg["min_spatial_barcode_overlap_fraction"]),
+        "reference_overlap_targets": spatial_reference_overlap_count
+        >= int(contract_cfg["min_reference_feature_overlap_targets"]),
+        "bed_overlap": spatial_bed_fraction
+        >= float(contract_cfg["min_bed_feature_overlap_fraction"]),
+        "coordinates": coordinate_valid,
+        "frozen_targets": frozen_count >= int(contract_cfg["min_frozen_targets"]),
+    }
+
+
 def audit_meld_cutar(
     reference_path: Path,
     reference_feature_qc_path: Path,
@@ -310,6 +332,7 @@ def audit_meld_cutar(
     spatial_reference_fraction = (
         len(spatial_ids & reference_ids) / len(spatial_ids) if spatial_ids else 0
     )
+    spatial_reference_overlap_count = len(spatial_ids & reference_ids)
     spatial_bed_fraction = (
         len(spatial_ids & bed_ids) / len(spatial_ids) if spatial_ids else 0
     )
@@ -323,16 +346,21 @@ def audit_meld_cutar(
         ).all()
         and catalog.loc[catalog["in_bed"], "strand"].isin(["+", "-"]).all()
     )
-    checks = {
-        "barcode_overlap": barcode_fraction
-        >= float(contract_cfg["min_spatial_barcode_overlap_fraction"]),
-        "reference_overlap": spatial_reference_fraction
-        >= float(contract_cfg["min_reference_feature_overlap_fraction"]),
-        "bed_overlap": spatial_bed_fraction
-        >= float(contract_cfg["min_bed_feature_overlap_fraction"]),
-        "coordinates": coordinate_valid,
-        "frozen_targets": len(frozen) >= int(contract_cfg["min_frozen_targets"]),
-    }
+    checks = _admission_checks(
+        barcode_fraction=barcode_fraction,
+        spatial_reference_overlap_count=spatial_reference_overlap_count,
+        spatial_bed_fraction=spatial_bed_fraction,
+        coordinate_valid=coordinate_valid,
+        frozen_count=len(frozen),
+        contract_cfg=contract_cfg,
+    )
+    coverage_warnings = []
+    if spatial_reference_fraction < float(
+        contract_cfg["warn_below_reference_feature_overlap_fraction"]
+    ):
+        coverage_warnings.append(
+            "LOW_REFERENCE_COVERAGE_EXPECTED_FOR_CROSS_SAMPLE_CUTAR_TRANSFER"
+        )
     status = "PASS" if all(checks.values()) else "FAIL"
 
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -392,6 +420,9 @@ def audit_meld_cutar(
                 "extra_cutar_barcodes": cutar_extra_barcodes,
                 "barcode_strategy": strategy,
                 "spatial_cutars": len(spatial_ids),
+                "spatial_reference_overlap_targets": (
+                    spatial_reference_overlap_count
+                ),
                 "spatial_reference_overlap_fraction": spatial_reference_fraction,
                 "spatial_bed_overlap_fraction": spatial_bed_fraction,
                 "coordinate_contract": "PASS" if coordinate_valid else "FAIL",
@@ -415,6 +446,7 @@ def audit_meld_cutar(
             else "BLOCK_W2B_REPAIR_INPUT_CONTRACT"
         ),
         "checks": {key: "PASS" if value else "FAIL" for key, value in checks.items()},
+        "coverage_warnings": coverage_warnings,
         "matrix": {
             "path": str(spatial_cutar_path),
             "source_filename": str(source_cfg["expected_filename"]),
@@ -433,6 +465,7 @@ def audit_meld_cutar(
             "extra_cutar_barcodes": cutar_extra_barcodes,
         },
         "feature_match": {
+            "spatial_reference_overlap_targets": spatial_reference_overlap_count,
             "spatial_reference_overlap_fraction": spatial_reference_fraction,
             "spatial_bed_overlap_fraction": spatial_bed_fraction,
             "exact_id_matching": True,
