@@ -66,6 +66,7 @@ and complete result directories must not be committed. See `.gitignore` and
 - [`docs/WEEK1_BASELINE.md`](docs/WEEK1_BASELINE.md)
 - [`docs/LOCAL_RESULT_EXPORT.md`](docs/LOCAL_RESULT_EXPORT.md)
 - [`docs/WEEK1_MULTIFOLD.md`](docs/WEEK1_MULTIFOLD.md)
+- [`docs/WEEK1_TUNING.md`](docs/WEEK1_TUNING.md)
 
 ## Resolution statement
 
