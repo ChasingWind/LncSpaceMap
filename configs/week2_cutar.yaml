@@ -1,4 +1,4 @@
-schema_version: "0.2"
+schema_version: "0.3"
 
 annotation:
   species: human
@@ -38,3 +38,17 @@ mapping:
   target_batch_size: 64
   min_reference_support_fraction: 0.05
   min_finite_prediction_fraction: 0.95
+
+evaluation:
+  random_state: 0
+  permutations: 200
+  alpha: 0.05
+  scale_factor: 10000
+  scientific_gate:
+    panel: primary_ge6
+    min_targets: 100
+    min_median_spearman: 0.05
+    min_median_detection_auroc: 0.55
+    min_median_detection_auprc_lift: 1.25
+    min_median_topk_recall_lift: 1.25
+    min_directional_passes: 3
