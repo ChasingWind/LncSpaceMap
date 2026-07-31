@@ -1,0 +1,54 @@
+{
+  "barcode_match": {
+    "extra_cutar_barcodes": 6,
+    "matched_spots": 617,
+    "overlap_fraction": 1.0,
+    "spatial_gene_spots": 617,
+    "strategy": "sequence16"
+  },
+  "checks": {
+    "barcode_overlap": "PASS",
+    "bed_overlap": "PASS",
+    "coordinates": "PASS",
+    "frozen_targets": "PASS",
+    "reference_overlap_targets": "PASS"
+  },
+  "coverage_warnings": [
+    "LOW_REFERENCE_COVERAGE_EXPECTED_FOR_CROSS_SAMPLE_CUTAR_TRANSFER"
+  ],
+  "decision": "ADMIT_W2B_REAL_CUTAR_MAPPING",
+  "feature_match": {
+    "exact_id_matching": true,
+    "genome_build_declared": "GRCh38",
+    "spatial_bed_overlap_fraction": 1.0,
+    "spatial_reference_overlap_fraction": 0.4493098524512137,
+    "spatial_reference_overlap_targets": 1888
+  },
+  "large_outputs": {
+    "aligned_truth_h5ad": "/home/bio_yinshuwei/Spatial/data/Spanc-Lnc/processed/week2/meld_cutar_contract/meld_cutar_truth_aligned.h5ad",
+    "full_target_catalog": "/home/bio_yinshuwei/Spatial/data/Spanc-Lnc/processed/week2/meld_cutar_contract/w2a_meld_cutar_target_catalog.tsv.gz"
+  },
+  "matrix": {
+    "chunk_rows": 64,
+    "cutars": 4202,
+    "header_style": "implicit_row_index",
+    "orientation": "features_by_cells",
+    "path": "/home/bio_yinshuwei/Spatial/data/Spanc-Lnc/MelD_cuTAR_mat.txt",
+    "source_filename": "MelD_cuTAR_mat.txt",
+    "source_sha1": "e8f581e9462c89daee9fe9da528885ed59768228",
+    "spots": 617
+  },
+  "schema_version": "0.1",
+  "stage": "w2a_meld_cutar_contract",
+  "status": "PASS",
+  "targets": {
+    "frozen_primary": 362,
+    "min_spatial_detected_spots": 3,
+    "reference_thresholds": {
+      "detected_cells_floor": 10,
+      "detected_fraction": 0.002,
+      "samples": 2,
+      "total_counts": 20
+    }
+  }
+}

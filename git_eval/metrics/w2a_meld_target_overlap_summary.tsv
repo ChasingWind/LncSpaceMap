@@ -1,0 +1,9 @@
+category	targets
+spatial_cutar_ids	4202
+reference_cutar_ids	43382
+bed_cutar_ids	219442
+spatial_reference_overlap	1888
+spatial_bed_overlap	4202
+reference_bed_overlap	43382
+three_way_overlap	1888
+frozen_primary_targets	362

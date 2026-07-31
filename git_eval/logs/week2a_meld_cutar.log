@@ -1,0 +1,4 @@
+2026-07-31 11:11:56,255 INFO barcode strategy=sequence16 overlap=617
+2026-07-31 11:11:57,000 INFO FAIL_W2A_MELD_CUTAR_CONTRACT spots=617 cutars=4202 frozen=362
+2026-07-31 11:22:34,660 INFO barcode strategy=sequence16 overlap=617
+2026-07-31 11:22:35,413 INFO PASS_W2A_MELD_CUTAR_CONTRACT spots=617 cutars=4202 frozen=362

@@ -1,0 +1,11 @@
+target_status	spatial_detection_bin	targets	median_spatial_total_counts	median_reference_detected_cells	median_reference_samples
+insufficient_reference_and_spatial_evidence	0 spots	10	0.0	0.0	0.0
+insufficient_reference_and_spatial_evidence	1-2 spots	2285	1.0	0.0	0.0
+primary_evaluable	3-5 spots	199	4.0	240.0	3.0
+primary_evaluable	6-10 spots	112	8.0	368.0	4.0
+primary_evaluable	>10 spots	51	16.0	420.0	4.0
+reference_supported_insufficient_spatial_truth	0 spots	8	0.0	212.5	3.0
+reference_supported_insufficient_spatial_truth	1-2 spots	923	1.0	225.0	3.0
+spatial_observed_insufficient_reference	3-5 spots	348	3.0	0.0	0.0
+spatial_observed_insufficient_reference	6-10 spots	168	8.0	0.0	0.0
+spatial_observed_insufficient_reference	>10 spots	98	14.0	0.0	0.0

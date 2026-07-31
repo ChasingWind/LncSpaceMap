@@ -1,0 +1,13 @@
+2026-07-31 11:22:34,660 INFO barcode strategy=sequence16 overlap=617
+... storing 'reference_feature_type' as categorical
+... storing 'reference_selection_tier' as categorical
+... storing 'chrom' as categorical
+... storing 'strand' as categorical
+... storing 'spatial_detection_bin' as categorical
+... storing 'target_status' as categorical
+2026-07-31 11:22:35,413 INFO PASS_W2A_MELD_CUTAR_CONTRACT spots=617 cutars=4202 frozen=362
+
+real	0m8.206s
+user	0m6.539s
+sys	0m0.802s
+w2a_exit_code=0

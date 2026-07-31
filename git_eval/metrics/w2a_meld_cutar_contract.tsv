@@ -1,0 +1,2 @@
+status	matrix_orientation	matrix_header_style	matrix_rows	matrix_columns	spatial_gene_spots	spatial_cutar_barcodes	matched_spots	barcode_overlap_fraction	extra_cutar_barcodes	barcode_strategy	spatial_cutars	spatial_reference_overlap_targets	spatial_reference_overlap_fraction	spatial_bed_overlap_fraction	coordinate_contract	reference_cells	frozen_primary_targets
+PASS	features_by_cells	implicit_row_index	4202	623	617	623	617	1.0	6	sequence16	4202	1888	0.4493098524512137	1.0	PASS	56557	362
