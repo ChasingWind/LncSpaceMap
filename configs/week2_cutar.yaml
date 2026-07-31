@@ -1,0 +1,21 @@
+schema_version: "0.1"
+
+annotation:
+  species: human
+  genome_build: GRCh38
+
+io:
+  chunk_rows: 64
+
+contract:
+  min_spatial_barcode_overlap_fraction: 0.99
+  min_reference_feature_overlap_fraction: 0.90
+  min_bed_feature_overlap_fraction: 0.95
+  min_frozen_targets: 30
+
+eligibility:
+  min_reference_total_counts: 20
+  min_reference_detected_cells: 10
+  min_reference_detected_fraction: 0.002
+  min_reference_samples: 2
+  min_spatial_detected_spots: 3
