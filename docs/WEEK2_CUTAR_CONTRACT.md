@@ -38,6 +38,17 @@ matched MelD spots.
 No target aliases, coordinate-overlap substitutions, or arbitrary duplicate
 resolution are allowed in this stage.
 
+Because MelD and the six acral-melanoma references are different biological
+samples, the fraction of all 4,202 spatial cuTARs present in the reference is a
+coverage statistic rather than an identifier-integrity gate. W2-A requires at
+least 100 exact-ID reference overlaps and at least 30 fully eligible frozen
+targets. A low overall overlap fraction is retained as a warning and later
+limits the scope of biological claims; it does not invalidate hundreds of
+exact, evaluable target matches.
+
+The aligned Week 1 spatial gene input is expected at
+`processed/week1/meld_genes_prepared.h5ad` in the documented server layout.
+
 ## Outputs
 
 Large server-only outputs:
