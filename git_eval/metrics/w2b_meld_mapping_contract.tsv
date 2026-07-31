@@ -1,0 +1,2 @@
+status	spots	reference_cells	anchors	targets	target_batches	finite_prediction_fraction	median_reference_support	minimum_reference_support	truth_used_for_training	target_leakage_check	cell_axis_check	spot_axis_check
+PASS	617	56557	2000	362	6	0.978675107676603	0.5672528743743896	0.0014785731909796596	False	PASS	PASS	PASS

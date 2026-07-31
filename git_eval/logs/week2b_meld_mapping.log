@@ -1,0 +1,32 @@
+2026-07-31 14:23:51,007 INFO fitting one Tangram map cells=56557 spots=617 anchors=2000 targets=362
+2026-07-31 14:23:58,200 INFO 2000 training genes are saved in `uns``training_genes` of both single cell and spatial Anndatas.
+2026-07-31 14:23:58,200 INFO 2000 overlapped genes are saved in `uns``overlap_genes` of both single cell and spatial Anndatas.
+2026-07-31 14:23:58,201 INFO uniform based density prior is calculated and saved in `obs``uniform_density` of the spatial Anndata.
+2026-07-31 14:23:58,201 INFO rna count based density prior is calculated and saved in `obs``rna_count_based_density` of the spatial Anndata.
+2026-07-31 14:23:58,201 INFO Allocate tensors for mapping.
+2026-07-31 14:23:58,789 INFO Begin training with 2000 genes and rna_count_based density_prior in cells mode...
+2026-07-31 14:24:01,361 INFO Printing scores every 100 epochs.
+2026-07-31 14:24:09,555 INFO Saving results..
+2026-07-31 14:24:10,537 INFO projected targets 1-64 of 362
+2026-07-31 14:24:10,877 INFO projected targets 65-128 of 362
+2026-07-31 14:24:11,216 INFO projected targets 129-192 of 362
+2026-07-31 14:24:11,547 INFO projected targets 193-256 of 362
+2026-07-31 14:24:11,877 INFO projected targets 257-320 of 362
+2026-07-31 14:24:12,199 INFO projected targets 321-362 of 362
+2026-07-31 14:24:17,216 INFO PASS_W2B_MELD_REAL_CUTAR_MAPPING spots=617 anchors=2000 targets=362
+2026-07-31 17:20:41,774 INFO fitting one Tangram map cells=56557 spots=617 anchors=2000 targets=362
+2026-07-31 17:20:48,975 INFO 2000 training genes are saved in `uns``training_genes` of both single cell and spatial Anndatas.
+2026-07-31 17:20:48,975 INFO 2000 overlapped genes are saved in `uns``overlap_genes` of both single cell and spatial Anndatas.
+2026-07-31 17:20:48,976 INFO uniform based density prior is calculated and saved in `obs``uniform_density` of the spatial Anndata.
+2026-07-31 17:20:48,976 INFO rna count based density prior is calculated and saved in `obs``rna_count_based_density` of the spatial Anndata.
+2026-07-31 17:20:48,976 INFO Allocate tensors for mapping.
+2026-07-31 17:20:49,562 INFO Begin training with 2000 genes and rna_count_based density_prior in cells mode...
+2026-07-31 17:20:52,188 INFO Printing scores every 100 epochs.
+2026-07-31 17:20:56,908 INFO Saving results..
+2026-07-31 17:20:57,891 INFO projected targets 1-64 of 362
+2026-07-31 17:20:58,237 INFO projected targets 65-128 of 362
+2026-07-31 17:20:58,567 INFO projected targets 129-192 of 362
+2026-07-31 17:20:58,902 INFO projected targets 193-256 of 362
+2026-07-31 17:20:59,231 INFO projected targets 257-320 of 362
+2026-07-31 17:20:59,549 INFO projected targets 321-362 of 362
+2026-07-31 17:21:04,563 INFO PASS_W2B_MELD_REAL_CUTAR_MAPPING spots=617 anchors=2000 targets=362

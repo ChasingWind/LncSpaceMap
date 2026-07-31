@@ -1,0 +1,45 @@
+{
+  "anchors": 2000,
+  "cell_axis_check": "PASS",
+  "decision": "ADMIT_W2C_REAL_CUTAR_EVALUATION",
+  "finite_prediction_fraction": 0.978675107676603,
+  "large_outputs": {
+    "cell_to_spot_map_h5ad": "/home/bio_yinshuwei/Spatial/data/Spanc-Lnc/processed/week2/meld_cutar_mapping/meld_w2b_cell_to_spot_map.h5ad",
+    "prediction_h5ad": "/home/bio_yinshuwei/Spatial/data/Spanc-Lnc/processed/week2/meld_cutar_mapping/meld_w2b_cutar_predictions.h5ad"
+  },
+  "median_reference_support": 0.5672528743743896,
+  "minimum_reference_support": 0.0014785731909796596,
+  "packages": {
+    "anndata": "0.12.10",
+    "numpy": "2.4.3",
+    "pandas": "2.3.3",
+    "scipy": "1.17.1",
+    "tangram-sc": "1.0.4"
+  },
+  "parameters": {
+    "backend": "tangram",
+    "density_prior": "rna_count_based",
+    "device": "cuda:0",
+    "learning_rate": 0.1,
+    "min_finite_prediction_fraction": 0.95,
+    "min_reference_fraction": 0.002,
+    "min_reference_support_fraction": 0.05,
+    "min_spatial_spots": 5,
+    "n_anchors": 2000,
+    "num_epochs": 200,
+    "random_state": 0,
+    "target_batch_size": 64
+  },
+  "platform": "Linux-4.18.0-305.3.1.el8_4.x86_64-x86_64-with-glibc2.27",
+  "python": "3.11.13",
+  "reference_cells": 56557,
+  "schema_version": "0.1",
+  "spot_axis_check": "PASS",
+  "spots": 617,
+  "stage": "w2b_meld_real_cutar_mapping",
+  "status": "PASS",
+  "target_batches": 6,
+  "target_leakage_check": "PASS",
+  "targets": 362,
+  "truth_used_for_training": false
+}
