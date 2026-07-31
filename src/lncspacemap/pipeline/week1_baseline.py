@@ -185,6 +185,8 @@ def run_fold(
             targets,
             device=str(config["tangram"]["device"]),
             num_epochs=int(config["tangram"]["num_epochs"]),
+            density_prior=str(config["tangram"]["density_prior"]),
+            learning_rate=float(config["tangram"]["learning_rate"]),
             random_state=int(config["project"]["seed"]),
         )
     else:
@@ -231,6 +233,7 @@ def run_fold(
         "targets_requested": len(requested),
         "targets_evaluated": len(targets),
         "target_source": target_source,
+        "backend_parameters": config.get(backend, {}),
         "permutations": int(config["evaluation"]["permutations"]),
         "leakage_check": "PASS",
         "spot_order_check": "PASS",
