@@ -1,4 +1,4 @@
-schema_version: "0.3"
+schema_version: "0.4"
 
 annotation:
   species: human
@@ -52,3 +52,15 @@ evaluation:
     min_median_detection_auprc_lift: 1.25
     min_median_topk_recall_lift: 1.25
     min_directional_passes: 3
+
+comparator:
+  panel: primary_ge6
+  material_delta:
+    pearson: 0.02
+    spearman: 0.02
+    z_nrmse: 0.02
+    detection_auroc: 0.03
+    detection_auprc: 0.002
+    detection_auprc_lift: 0.25
+    topk_recall: 0.02
+    topk_recall_lift: 0.25
