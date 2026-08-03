@@ -12,6 +12,9 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from lncspacemap.pipeline.week2_cutar import audit_meld_cutar  # noqa: E402
+from lncspacemap.pipeline.week2_comparator import (  # noqa: E402
+    run_meld_projection_comparator,
+)
 from lncspacemap.pipeline.week2_evaluation import (  # noqa: E402
     run_meld_cutar_evaluation,
 )
@@ -20,7 +23,7 @@ from lncspacemap.pipeline.week2_mapping import run_meld_cutar_mapping  # noqa: E
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("mode", choices=["audit", "map", "evaluate"])
+    parser.add_argument("mode", choices=["audit", "map", "evaluate", "compare"])
     parser.add_argument("--reference", type=Path)
     parser.add_argument("--reference-feature-qc", type=Path)
     parser.add_argument("--annotated-feature-qc", type=Path)
@@ -30,6 +33,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--frozen-targets", type=Path)
     parser.add_argument("--prediction", type=Path)
     parser.add_argument("--truth-cutar", type=Path)
+    parser.add_argument("--relative-metrics", type=Path)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument(
         "--config",
@@ -56,6 +60,7 @@ def main() -> int:
         "audit": "week2a_meld_cutar",
         "map": "week2b_meld_mapping",
         "evaluate": "week2c_meld_evaluation",
+        "compare": "week2c2_meld_comparator",
     }[args.mode]
     logging.basicConfig(
         level=logging.INFO,
@@ -100,7 +105,7 @@ def main() -> int:
             args.output_dir,
             args.review_dir,
         )
-    else:
+    elif args.mode == "evaluate":
         _require(args, ("prediction", "spatial_gene", "truth_cutar"))
         run_meld_cutar_evaluation(
             args.prediction,
@@ -108,6 +113,19 @@ def main() -> int:
             args.truth_cutar,
             args.config,
             args.output_dir,
+            args.review_dir,
+        )
+    else:
+        _require(
+            args,
+            ("prediction", "spatial_gene", "truth_cutar", "relative_metrics"),
+        )
+        run_meld_projection_comparator(
+            args.prediction,
+            args.spatial_gene,
+            args.truth_cutar,
+            args.relative_metrics,
+            args.config,
             args.review_dir,
         )
     return 0
