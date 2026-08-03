@@ -1,0 +1,35 @@
+{
+  "abstention_policy": "exclude_from_five_metrics_penalize_topk_denominator",
+  "decision": "HOLD_W2D_RUN_BOUNDED_COMPARATOR",
+  "detection_truth": "raw_cuTAR_count_gt_0",
+  "large_outputs": {
+    "evaluation_bundle_h5ad": "/home/bio_yinshuwei/Spatial/data/Spanc-Lnc/processed/week2/meld_cutar_evaluation/meld_w2c_evaluation_bundle.h5ad"
+  },
+  "metrics": [
+    "pearson",
+    "spearman",
+    "z_nrmse",
+    "detection_auroc",
+    "detection_auprc",
+    "topk_recall"
+  ],
+  "permutations": 200,
+  "prediction_coverage": 0.978675107676603,
+  "schema_version": "0.1",
+  "scientific_gate": {
+    "detection_auprc_lift": false,
+    "detection_auroc": false,
+    "directional_passes": 0,
+    "spearman": false,
+    "targets": true,
+    "topk_recall_lift": false
+  },
+  "spot_axis_check": "PASS",
+  "spots": 617,
+  "stage": "w2c_meld_real_cutar_evaluation",
+  "status": "PASS",
+  "target_axis_check": "PASS",
+  "targets": 362,
+  "truth_normalization": "log1p(cuTAR/(gene+all_cuTAR)*10000)",
+  "truth_separation_check": "PASS"
+}
